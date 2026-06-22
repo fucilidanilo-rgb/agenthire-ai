@@ -1,0 +1,146 @@
+<div class="cpi">
+
+  <!-- ── SEZIONE 1: PDF Upload ─────────────────────────────── -->
+  <div class="cpi__section">
+
+    <p class="cpi__section-label">
+      <span class="cpi__section-badge">PDF</span>
+      Carica il CV
+    </p>
+
+    <div
+      class="cpi__dropzone"
+      [ngClass]="{
+        'cpi__dropzone--hover':  isDragOver,
+        'cpi__dropzone--filled': !!pdfFileName
+      }"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="onDropzoneClick()"
+      (keydown.enter)="onDropzoneClick()"
+      (keydown.space)="$event.preventDefault(); onDropzoneClick()"
+      role="button"
+      [tabindex]="pdfFileName ? -1 : 0"
+      [attr.aria-label]="pdfFileName ? 'CV caricato: ' + pdfFileName : 'Clicca o trascina per caricare un file PDF'"
+    >
+      <input
+        #fileInput
+        type="file"
+        accept=".pdf,application/pdf"
+        class="cpi__file-input"
+        (change)="onFileInputChange($event)"
+        aria-hidden="true"
+        tabindex="-1"
+      />
+
+      <!-- Empty state -->
+      <ng-container *ngIf="!pdfFileName">
+        <span class="cpi__dz-icon" aria-hidden="true">↑</span>
+        <span class="cpi__dz-primary">Trascina il CV qui</span>
+        <span class="cpi__dz-or">oppure</span>
+        <button
+          type="button"
+          class="cpi__upload-btn"
+          (click)="$event.stopPropagation(); triggerFileInput()"
+        >
+          Carica CV
+        </button>
+        <span class="cpi__dz-hint">Solo file .pdf</span>
+      </ng-container>
+
+      <!-- Loaded state -->
+      <ng-container *ngIf="!!pdfFileName">
+        <span class="cpi__file-icon" aria-hidden="true">📎</span>
+        <div class="cpi__file-info">
+          <span class="cpi__file-name">{{ pdfFileName }}</span>
+          <span class="cpi__file-status">CV caricato</span>
+        </div>
+        <button
+          type="button"
+          class="cpi__file-remove"
+          (click)="$event.stopPropagation(); removePdf()"
+          aria-label="Rimuovi CV caricato"
+          tabindex="0"
+        >
+          ×
+        </button>
+      </ng-container>
+
+    </div>
+
+    <p class="cpi__error" *ngIf="pdfError" role="alert">
+      <span aria-hidden="true">⚠</span> {{ pdfError }}
+    </p>
+
+  </div>
+
+  <!-- ── Divisore ──────────────────────────────────────────── -->
+  <div class="cpi__sep"><span class="cpi__sep-text">oppure</span></div>
+
+  <!-- ── SEZIONE 2: LinkedIn URL ───────────────────────────── -->
+  <div class="cpi__section">
+    <label class="cpi__label" for="cpi-linkedin">
+      <span class="cpi__section-badge">in</span>
+      Profilo LinkedIn
+    </label>
+    <div class="cpi__input-wrap">
+      <input
+        id="cpi-linkedin"
+        type="url"
+        class="cpi__input"
+        placeholder="https://linkedin.com/in/tuo-profilo"
+        [(ngModel)]="linkedinUrl"
+        name="linkedinUrl"
+        (ngModelChange)="onLinkedinChange()"
+        autocomplete="off"
+      />
+    </div>
+    <span class="cpi__hint">Puoi inserire il link LinkedIn se non vuoi caricare un CV.</span>
+  </div>
+
+  <!-- ── Divisore ──────────────────────────────────────────── -->
+  <div class="cpi__sep"><span class="cpi__sep-text">oppure</span></div>
+
+  <!-- ── SEZIONE 3: Testo manuale ──────────────────────────── -->
+  <div class="cpi__section">
+    <label class="cpi__label" for="cpi-manual">
+      <span class="cpi__section-badge">✎</span>
+      Incolla manualmente
+    </label>
+    <textarea
+      id="cpi-manual"
+      class="cpi__textarea"
+      placeholder="Incolla qui il tuo CV o il riepilogo LinkedIn…"
+      [(ngModel)]="manualText"
+      name="manualText"
+      rows="5"
+      (ngModelChange)="onManualChange()"
+    ></textarea>
+    <span class="cpi__hint">Testo libero o strutturato — l'AI gestisce entrambi i formati.</span>
+  </div>
+
+  <!-- ── PREVIEW CARD ──────────────────────────────────────── -->
+  <div class="cpi__preview" *ngIf="isReady" role="status" aria-live="polite">
+    <div class="cpi__preview-header">
+      <span class="cpi__preview-dot" aria-hidden="true"></span>
+      <span class="cpi__preview-title">Profilo candidato</span>
+      <span class="cpi__preview-badge">Pronto per l'analisi</span>
+    </div>
+    <div class="cpi__preview-body">
+      <div class="cpi__preview-row">
+        <span class="cpi__preview-key">Fonte</span>
+        <span class="cpi__preview-val">{{ sourceLabel }}</span>
+      </div>
+      <div class="cpi__preview-row" *ngIf="pdfFileName">
+        <span class="cpi__preview-key">File</span>
+        <span class="cpi__preview-val cpi__preview-val--file">{{ pdfFileName }}</span>
+      </div>
+      <div class="cpi__preview-row" *ngIf="linkedinUrl.trim() && activeSource === 'linkedin'">
+        <span class="cpi__preview-key">LinkedIn</span>
+        <span class="cpi__preview-val cpi__preview-val--link">{{ linkedinUrl }}</span>
+      </div>
+    </div>
+  </div>
+
+</div>

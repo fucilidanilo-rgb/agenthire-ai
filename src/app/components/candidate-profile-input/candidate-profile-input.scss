@@ -1,0 +1,445 @@
+// ============================================================
+// CANDIDATE PROFILE INPUT — Light Premium
+// ============================================================
+
+.cpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  // ── Section ──────────────────────────────────────────────
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__section-label,
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #5C3D2E;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: default;
+  }
+
+  &__section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: rgba(196, 149, 106, 0.1);
+    border: 1px solid rgba(196, 149, 106, 0.22);
+    border-radius: 5px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #C4956A;
+    letter-spacing: 0;
+    text-transform: none;
+    flex-shrink: 0;
+  }
+
+  // ── Separator ─────────────────────────────────────────────
+  &__sep {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.1rem 0;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(212, 184, 160, 0.55);
+    }
+  }
+
+  &__sep-text {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: rgba(139, 99, 85, 0.4);
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  // ── Dropzone ──────────────────────────────────────────────
+  &__dropzone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 148px;
+    padding: 1.75rem 1.5rem;
+    background: rgba(245, 237, 216, 0.35);
+    border: 1.5px dashed rgba(212, 184, 160, 0.7);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition:
+      border-color 0.22s,
+      background   0.22s,
+      box-shadow   0.22s;
+    outline: none;
+
+    &:hover,
+    &:focus-visible {
+      border-color: rgba(196, 149, 106, 0.55);
+      background: rgba(245, 237, 216, 0.55);
+      box-shadow: 0 0 0 3px rgba(196, 149, 106, 0.1);
+    }
+
+    &--hover {
+      border-color: rgba(196, 149, 106, 0.75) !important;
+      background: rgba(232, 201, 160, 0.12) !important;
+      box-shadow:
+        0 0 0 3px rgba(196, 149, 106, 0.12),
+        inset 0 0 24px rgba(196, 149, 106, 0.04) !important;
+    }
+
+    &--filled {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 1rem;
+      min-height: 72px;
+      padding: 1.1rem 1.25rem;
+      border-style: solid;
+      border-color: rgba(196, 149, 106, 0.3);
+      background: rgba(245, 237, 216, 0.4);
+      cursor: default;
+      text-align: left;
+
+      &:hover {
+        border-color: rgba(196, 149, 106, 0.42);
+        background: rgba(245, 237, 216, 0.52);
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__file-input {
+    position: absolute;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  // ── Dropzone empty state ───────────────────────────────────
+  &__dz-icon {
+    font-size: 1.5rem;
+    color: rgba(196, 149, 106, 0.45);
+    line-height: 1;
+  }
+
+  &__dz-primary {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: rgba(44, 31, 26, 0.78);
+    letter-spacing: -0.01em;
+  }
+
+  &__dz-or {
+    font-size: 0.72rem;
+    color: rgba(92, 61, 46, 0.58);
+    font-weight: 400;
+  }
+
+  &__dz-hint {
+    font-size: 0.7rem;
+    color: rgba(92, 61, 46, 0.55);
+    font-weight: 400;
+    margin-top: 0.1rem;
+  }
+
+  // ── Upload button ──────────────────────────────────────────
+  &__upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.48rem 1.1rem;
+    background: transparent;
+    border: 1px solid rgba(196, 149, 106, 0.4);
+    border-radius: 8px;
+    color: rgba(139, 99, 85, 0.78);
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: 'DM Sans', inherit;
+    cursor: pointer;
+    letter-spacing: 0.015em;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: rgba(196, 149, 106, 0.65);
+      color: #8B6355;
+      background: rgba(196, 149, 106, 0.07);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(196, 149, 106, 0.4);
+      outline-offset: 2px;
+    }
+  }
+
+  // ── Dropzone loaded state ─────────────────────────────────
+  &__file-icon {
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    opacity: 0.65;
+  }
+
+  &__file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__file-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__file-status {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #C4956A;
+    letter-spacing: 0.04em;
+  }
+
+  &__file-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: rgba(212, 184, 160, 0.3);
+    border: 1px solid rgba(184, 171, 152, 0.5);
+    border-radius: 50%;
+    color: rgba(139, 99, 85, 0.7);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.18s ease;
+
+    &:hover {
+      background: rgba(212, 184, 160, 0.55);
+      color: #2C1F1A;
+      border-color: rgba(184, 171, 152, 0.8);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(196, 149, 106, 0.4);
+      outline-offset: 2px;
+    }
+  }
+
+  // ── Error ─────────────────────────────────────────────────
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: rgba(180, 60, 40, 0.82);
+    padding: 0.5rem 0.75rem;
+    background: rgba(200, 70, 50, 0.05);
+    border: 1px solid rgba(200, 70, 50, 0.18);
+    border-radius: 8px;
+    animation: cpi-fade-in 0.22s ease;
+  }
+
+  // ── LinkedIn / URL input ──────────────────────────────────
+  &__input-wrap {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #FFFFFF;
+    border: 1px solid rgba(212, 184, 160, 0.7);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    font-family: 'DM Sans', inherit;
+    font-weight: 400;
+    line-height: 1.5;
+    transition: border-color 0.22s, box-shadow 0.22s;
+    outline: none;
+
+    &::placeholder { color: #B09585; }
+    &:hover        { border-color: rgba(184, 171, 152, 0.9); }
+    &:focus {
+      border-color: var(--cool-border);
+      box-shadow: 0 0 0 3px var(--cool-glow);
+    }
+  }
+
+  // ── Textarea ──────────────────────────────────────────────
+  &__textarea {
+    width: 100%;
+    padding: 0.88rem 1rem;
+    background: #FFFFFF;
+    border: 1px solid rgba(212, 184, 160, 0.7);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    font-family: 'DM Sans', inherit;
+    font-weight: 400;
+    line-height: 1.72;
+    resize: vertical;
+    min-height: 116px;
+    transition: border-color 0.22s, box-shadow 0.22s;
+    outline: none;
+
+    &::placeholder { color: #B09585; }
+    &:hover        { border-color: rgba(184, 171, 152, 0.9); }
+    &:focus {
+      border-color: var(--cool-border);
+      box-shadow: 0 0 0 3px var(--cool-glow);
+    }
+  }
+
+  // ── Hint ──────────────────────────────────────────────────
+  &__hint {
+    font-size: 0.78rem;
+    color: #7A5234;
+    padding-left: 0.2rem;
+    font-weight: 400;
+  }
+
+  // ── Preview card ──────────────────────────────────────────
+  &__preview {
+    margin-top: 1rem;
+    background: rgba(245, 237, 216, 0.45);
+    border: 1px solid rgba(196, 149, 106, 0.22);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: cpi-fade-in 0.3s ease;
+  }
+
+  &__preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid rgba(212, 184, 160, 0.45);
+  }
+
+  &__preview-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #C4956A;
+    box-shadow: 0 0 6px rgba(196, 149, 106, 0.4);
+    flex-shrink: 0;
+    animation: cpi-dot-breathe 2s ease-in-out infinite;
+  }
+
+  &__preview-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(44, 31, 26, 0.65);
+    letter-spacing: 0.01em;
+    flex: 1;
+  }
+
+  &__preview-badge {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: #C4956A;
+    background: rgba(196, 149, 106, 0.1);
+    border: 1px solid rgba(196, 149, 106, 0.22);
+    border-radius: 999px;
+    padding: 0.18rem 0.65rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__preview-body {
+    padding: 0.75rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  &__preview-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  &__preview-key {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: rgba(139, 99, 85, 0.5);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    width: 52px;
+    flex-shrink: 0;
+  }
+
+  &__preview-val {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: rgba(44, 31, 26, 0.72);
+    min-width: 0;
+
+    &--file {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    &--link {
+      color: #C4956A;
+      word-break: break-all;
+    }
+  }
+}
+
+// ── Animations ───────────────────────────────────────────────
+
+@keyframes cpi-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cpi-dot-breathe {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+// ── Responsive ───────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .cpi {
+    &__dropzone {
+      min-height: 128px;
+      padding: 1.4rem 1.1rem;
+    }
+
+    &__preview-val--file,
+    &__preview-val--link { max-width: 160px; }
+  }
+}

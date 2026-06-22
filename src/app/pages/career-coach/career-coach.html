@@ -1,0 +1,206 @@
+<div class="page page--coach">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       EMPTY STATE
+  ══════════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="!result">
+    <div class="empty-report">
+      <div class="empty-report__icon">✦</div>
+      <h2 class="empty-report__title">Nessun piano disponibile</h2>
+      <p class="empty-report__desc">
+        Avvia una sessione Career Coach per generare il tuo piano di sviluppo personalizzato.
+      </p>
+      <a routerLink="/new-analysis" class="btn btn--primary">
+        ✦ &nbsp;Avvia Career Coach <span class="btn__arrow">→</span>
+      </a>
+    </div>
+  </ng-container>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PIANO CAREER COACH
+  ══════════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="result">
+
+    <!-- ── 1. HEADER ──────────────────────────────────────────── -->
+    <header class="report-header">
+      <div class="report-header__left">
+        <span class="report-header__eyebrow">
+        <span class="mode-badge mode-badge--coach">🚀 Career Coach AI</span>
+        Piano di Sviluppo
+      </span>
+        <h1 class="report-header__role">{{ result.input.goal }}</h1>
+        <span class="report-header__date">
+          Generato il
+          {{ result.analyzedAt | date:'dd/MM/yyyy' }}
+          alle
+          {{ result.analyzedAt | date:'HH:mm' }}
+        </span>
+        <span class="sector-badge">
+          ✦&nbsp; Settore obiettivo: <strong>{{ result.targetCategoryLabel }}</strong>
+        </span>
+      </div>
+      <a routerLink="/new-analysis" class="btn btn--new">
+        + Nuovo piano
+      </a>
+    </header>
+
+    <!-- ── 1b. TRANSIZIONE DI CARRIERA ──────────────────────── -->
+    <div class="transition-track" *ngIf="result.sourceCategoryId !== result.targetCategoryId">
+      <div class="transition-track__from">
+        <span class="transition-track__label">Background attuale</span>
+        <span class="transition-track__value">{{ result.sourceCategoryLabel }}</span>
+      </div>
+      <div class="transition-track__arrow">
+        <span class="transition-track__line"></span>
+        <span class="transition-track__chevron">→</span>
+      </div>
+      <div class="transition-track__to">
+        <span class="transition-track__label">Obiettivo professionale</span>
+        <span class="transition-track__value transition-track__value--target">{{ result.targetCategoryLabel }}</span>
+      </div>
+      <span class="transition-track__badge">Transizione di carriera</span>
+    </div>
+
+    <!-- ── 2. METRICHE ────────────────────────────────────────── -->
+    <div class="metrics-strip">
+      <div class="metric-tile">
+        <span class="metric-tile__value">{{ result.transferableSkills.length }}</span>
+        <span class="metric-tile__label">Skill<br>trasferibili</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-tile__value" style="color:#D4956A">
+          {{ result.missingSkills.length }}
+        </span>
+        <span class="metric-tile__label">Skill<br>da acquisire</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-tile__value">90</span>
+        <span class="metric-tile__label">Giorni di<br>roadmap</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-tile__value">{{ result.priorityActions.length }}</span>
+        <span class="metric-tile__label">Azioni<br>prioritarie</span>
+      </div>
+    </div>
+
+    <!-- ── 3. SKILL GRID ─────────────────────────────────────── -->
+    <div class="skill-grid">
+
+      <div class="report-card">
+        <div class="report-card__head">
+          <span class="report-card__icon">✦</span>
+          <span class="report-card__label">Skill trasferibili</span>
+        </div>
+        <div class="chip-list">
+          <span
+            *ngFor="let s of result.transferableSkills"
+            class="chip chip--detected"
+          >{{ s }}</span>
+          <span *ngIf="result.transferableSkills.length === 0" class="chip-empty">
+            Nessuna skill riconosciuta nel settore target. Tutto da costruire!
+          </span>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-card__head">
+          <span class="report-card__icon">◈</span>
+          <span class="report-card__label">Skill da acquisire</span>
+        </div>
+        <div class="chip-list">
+          <span
+            *ngFor="let s of result.missingSkills"
+            class="chip chip--missing"
+          >{{ s }}</span>
+          <span *ngIf="result.missingSkills.length === 0" class="chip-empty chip-empty--good">
+            Ottimo! Hai già le skill del settore target.
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── 4. ROADMAP 30/60/90 ────────────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">🗺️</span>
+        <span class="report-card__label">Roadmap 30 / 60 / 90 giorni</span>
+      </div>
+      <div class="roadmap-grid">
+        <div
+          *ngFor="let phase of result.roadmap; let i = index"
+          class="roadmap-phase"
+          [class.roadmap-phase--highlight]="i === 0"
+        >
+          <div class="roadmap-phase__header">
+            <span class="roadmap-phase__period">{{ phase.period }}</span>
+          </div>
+          <ul class="roadmap-phase__actions">
+            <li *ngFor="let action of phase.actions" class="roadmap-phase__action">
+              <span class="roadmap-phase__dot"></span>
+              {{ action }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 5. AZIONI PRIORITARIE ──────────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">✦</span>
+        <span class="report-card__label">Azioni prioritarie</span>
+      </div>
+      <ul class="tip-list">
+        <li *ngFor="let action of result.priorityActions" class="tip-list__item">
+          <span class="tip-list__dot"></span>
+          <span>{{ action }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 6. SUGGERIMENTI PORTFOLIO ──────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">💼</span>
+        <span class="report-card__label">Suggerimenti portfolio</span>
+      </div>
+      <ul class="tip-list">
+        <li *ngFor="let tip of result.portfolioSuggestions" class="tip-list__item">
+          <span class="tip-list__dot"></span>
+          <span>{{ tip }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 7. INSIGHT MOTIVAZIONALE ──────────────────────────── -->
+    <div class="report-card report-card--full report-card--motivational">
+      <div class="report-card__head">
+        <span class="report-card__icon">◈</span>
+        <span class="report-card__label">Insight dal tuo Career Coach AI</span>
+      </div>
+      <p class="motivational-text">{{ result.motivationalInsight }}</p>
+    </div>
+
+    <!-- ── 8. AGENT INSIGHTS ──────────────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">✦</span>
+        <span class="report-card__label">Insights degli agenti AI</span>
+      </div>
+      <div class="insights-grid">
+        <div
+          *ngFor="let insight of result.agentInsights"
+          class="insight-card"
+        >
+          <span class="insight-card__icon">{{ insight.icon }}</span>
+          <div class="insight-card__body">
+            <span class="insight-card__name">{{ insight.agentName }}</span>
+            <p class="insight-card__text">{{ insight.summary }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

@@ -1,0 +1,179 @@
+<div class="page page--history">
+
+  <div class="page__header">
+    <h1 class="page__title">Archivio</h1>
+    <p class="page__desc">
+      Analisi candidature e piani carriera generati. Riaprili per rivedere il report o eliminali per liberare spazio.
+    </p>
+  </div>
+
+  <!-- ── Tabs ─────────────────────────────────────────────────── -->
+  <div class="history-tabs">
+    <button
+      class="history-tab"
+      [class.history-tab--active]="activeTab === 'analysis'"
+      (click)="setTab('analysis')"
+      type="button"
+    >
+      <span class="history-tab__icon">🎯</span>
+      Analisi candidature
+      <span class="history-tab__count" *ngIf="analysisCount > 0">{{ analysisCount }}</span>
+    </button>
+    <button
+      class="history-tab"
+      [class.history-tab--active]="activeTab === 'coach'"
+      (click)="setTab('coach')"
+      type="button"
+    >
+      <span class="history-tab__icon">🚀</span>
+      Piani carriera
+      <span class="history-tab__count" *ngIf="coachCount > 0">{{ coachCount }}</span>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB: ANALISI CANDIDATURE
+  ═══════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="activeTab === 'analysis'">
+
+    <div class="history-empty" *ngIf="analysisHistory.length === 0">
+      <div class="history-empty__icon">◈</div>
+      <h3 class="history-empty__title">Nessun report salvato</h3>
+      <p class="history-empty__desc">Avvia una nuova analisi per creare il tuo primo report.</p>
+      <a routerLink="/new-analysis" class="history-empty__cta">
+        🎯 &nbsp;Avvia un'analisi <span>→</span>
+      </a>
+    </div>
+
+    <div class="history-grid" *ngIf="analysisHistory.length > 0">
+      <div
+        *ngFor="let item of analysisHistory"
+        class="history-card history-card--analysis"
+      >
+        <!-- Head: badge + data + elimina -->
+        <div class="history-card__head">
+          <span class="history-card__mode-badge history-card__mode-badge--recruiting">
+            🎯 Recruiting AI
+          </span>
+          <span class="history-card__date">{{ item.analyzedAt | date:'dd/MM/yy · HH:mm' }}</span>
+          <button
+            class="history-card__delete"
+            (click)="deleteAnalysis(item.id, $event)"
+            title="Elimina"
+            type="button"
+          >✕</button>
+        </div>
+
+        <!-- Titolo -->
+        <h3 class="history-card__title">{{ item.application?.role || '—' }}</h3>
+
+        <!-- Settore -->
+        <div class="history-card__meta">
+          <span class="history-card__sector">{{ item.detectedCategory }}</span>
+        </div>
+
+        <!-- Score bar -->
+        <div class="history-card__score-row">
+          <div class="history-card__score-bar">
+            <div
+              class="history-card__score-fill"
+              [style.width.%]="item.matchScore"
+              [style.background]="gradeColor(item.grade)"
+            ></div>
+          </div>
+          <span class="history-card__score-val" [style.color]="gradeColor(item.grade)">
+            {{ item.matchScore }}%
+          </span>
+        </div>
+
+        <!-- Footer: grade + stats + riapri -->
+        <div class="history-card__footer">
+          <span
+            class="history-card__grade"
+            [style.color]="gradeColor(item.grade)"
+            [style.borderColor]="gradeColor(item.grade)"
+          >{{ gradeLabel(item.grade) }}</span>
+          <span class="history-card__stat">
+            {{ item.detectedSkills?.length ?? 0 }} skill · {{ item.missingSkills?.length ?? 0 }} lacune
+          </span>
+          <button
+            class="history-card__reopen"
+            (click)="reopenAnalysis(item)"
+            type="button"
+          >Riapri →</button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB: PIANI CARRIERA
+  ═══════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="activeTab === 'coach'">
+
+    <div class="history-empty" *ngIf="coachHistory.length === 0">
+      <div class="history-empty__icon">✦</div>
+      <h3 class="history-empty__title">Nessun report salvato</h3>
+      <p class="history-empty__desc">Avvia una nuova analisi per creare il tuo primo report.</p>
+      <a
+        routerLink="/new-analysis"
+        [queryParams]="{mode:'coach'}"
+        class="history-empty__cta history-empty__cta--coach"
+      >
+        🚀 &nbsp;Crea il mio piano <span>→</span>
+      </a>
+    </div>
+
+    <div class="history-grid" *ngIf="coachHistory.length > 0">
+      <div
+        *ngFor="let item of coachHistory"
+        class="history-card history-card--coach"
+      >
+        <!-- Head -->
+        <div class="history-card__head">
+          <span class="history-card__mode-badge history-card__mode-badge--coach">
+            🚀 Career Coach AI
+          </span>
+          <span class="history-card__date">{{ item.analyzedAt | date:'dd/MM/yy · HH:mm' }}</span>
+          <button
+            class="history-card__delete"
+            (click)="deleteCoach(item.id, $event)"
+            title="Elimina"
+            type="button"
+          >✕</button>
+        </div>
+
+        <!-- Titolo -->
+        <h3 class="history-card__title">{{ item.input?.goal || '—' }}</h3>
+
+        <!-- Transizione o settore -->
+        <div class="history-card__transition" *ngIf="isTransition(item)">
+          <span class="history-card__trans-from">{{ item.sourceCategoryLabel }}</span>
+          <span class="history-card__trans-arrow">→</span>
+          <span class="history-card__trans-to">{{ item.targetCategoryLabel }}</span>
+        </div>
+        <div class="history-card__meta" *ngIf="!isTransition(item)">
+          <span class="history-card__sector">{{ item.targetCategoryLabel }}</span>
+        </div>
+
+        <!-- Footer -->
+        <div class="history-card__footer">
+          <span class="history-card__stat history-card__stat--green">
+            {{ item.transferableSkills?.length ?? 0 }} trasferibili
+          </span>
+          <span class="history-card__stat history-card__stat--orange">
+            {{ item.missingSkills?.length ?? 0 }} da acquisire
+          </span>
+          <button
+            class="history-card__reopen history-card__reopen--coach"
+            (click)="reopenCoach(item)"
+            type="button"
+          >Riapri →</button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

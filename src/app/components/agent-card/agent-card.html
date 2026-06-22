@@ -1,0 +1,31 @@
+<div class="agent-card" [ngClass]="'agent-card--' + status">
+
+  <!-- Icona con ring pulsante quando working -->
+  <div class="agent-card__icon-area">
+    <div class="agent-card__icon-wrap">
+      <span class="agent-card__icon">{{ icon }}</span>
+      <span class="agent-card__pulse-ring" *ngIf="status === 'working'"></span>
+    </div>
+  </div>
+
+  <!-- Nome + descrizione -->
+  <div class="agent-card__body">
+    <span class="agent-card__name">{{ name }}</span>
+    <span class="agent-card__desc">{{ description }}</span>
+  </div>
+
+  <!-- Badge stato -->
+  <div class="agent-card__badge-area">
+    <span class="badge badge--waiting" *ngIf="status === 'waiting'">
+      In attesa
+    </span>
+    <span class="badge badge--working" *ngIf="status === 'working'">
+      <span class="badge__dot"></span>
+      In analisi
+    </span>
+    <span class="badge badge--done" *ngIf="status === 'completed'">
+      ✓ Completato
+    </span>
+  </div>
+
+</div>

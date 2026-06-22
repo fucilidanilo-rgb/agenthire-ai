@@ -1,59 +1,241 @@
-# AgenthireAi
+# AgentHire AI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+## Overview
 
-## Development server
+AgentHire AI è una web application sviluppata in Angular che simula un workflow di recruiting e career coaching basato su agenti AI.
 
-To start a local development server, run:
+L'obiettivo del progetto è aiutare candidati, studenti e professionisti a:
 
-```bash
-ng serve
+- Analizzare il proprio CV
+- Confrontarlo con una Job Description
+- Identificare skill gap
+- Ottenere suggerimenti personalizzati
+- Costruire un piano di crescita professionale
+
+Il progetto è stato realizzato come portfolio project per dimostrare competenze Frontend, Angular, TypeScript, UX/UI e progettazione di applicazioni AI-oriented.
+
+---
+
+## Features
+
+### Recruiting AI
+
+Analisi candidatura tramite:
+
+- Upload CV PDF
+- LinkedIn URL
+- Inserimento manuale del profilo
+
+Output:
+
+- Compatibilità candidatura
+- Skill rilevate
+- Skill mancanti
+- Checklist candidatura
+- Insight generati dagli agenti
+- Analisi multi-settore
+
+---
+
+### Career Coach AI
+
+Generazione roadmap professionale personalizzata.
+
+Output:
+
+- Skill trasferibili
+- Skill da acquisire
+- Piano 30 / 60 / 90 giorni
+- Azioni prioritarie
+- Strategia portfolio
+- Piano di crescita professionale
+
+---
+
+### Archivio Analisi
+
+Salvataggio locale delle analisi effettuate tramite:
+
+- LocalStorage
+- Cronologia risultati
+- Riapertura risultati precedenti
+- Eliminazione risultati
+
+---
+
+## Technologies
+
+- Angular
+- TypeScript
+- HTML5
+- SCSS
+- Angular Routing
+- Standalone Components
+- LocalStorage
+- Mock AI Logic
+
+---
+
+## Architecture
+
+```text
+src/
+├── pages/
+│   ├── home/
+│   ├── dashboard/
+│   ├── history/
+│   ├── recruiting/
+│   └── career-coach/
+│
+├── services/
+│   ├── agent.service.ts
+│   ├── analysis.service.ts
+│   └── storage.service.ts
+│
+├── models/
+├── utils/
+└── shared/
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Main Workflows
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Recruiting AI
 
-```bash
-ng generate component component-name
+```text
+CV / LinkedIn
+        ↓
+ Skill Analysis
+        ↓
+ Skill Gap Detection
+        ↓
+ AI Insights
+        ↓
+ Candidate Report
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Career Coach AI
 
-```bash
-ng generate --help
+```text
+Current Background
+        ↓
+ Career Goal
+        ↓
+ Transferable Skills
+        ↓
+ Missing Skills
+        ↓
+ 30 / 60 / 90 Day Plan
 ```
 
-## Building
+---
 
-To build the project run:
+## Future Roadmap
+
+### Phase 2
+
+- User Authentication
+- Supabase Integration
+- Cloud Storage
+- User Profiles
+- Private Analysis History
+
+### Phase 3
+
+- Real CV Parsing
+- PDF Text Extraction
+- AI API Integration
+- Cover Letter Generator
+- Interview Simulator
+
+### Phase 4
+
+- Recruiter Dashboard
+- Team Collaboration
+- Candidate Tracking
+- Analytics
+
+---
+
+## Design System
+
+AgentHire AI follows the Bianca Studio design language:
+
+- Warm beige palette
+- Soft ivory backgrounds
+- Dusty rose accents
+- Elegant typography
+- Minimal and premium interface
+- Human-centered AI experience
+
+---
+
+## Installation
+
+Clone the repository:
 
 ```bash
-ng build
+git clone https://github.com/YOUR_USERNAME/agenthire-ai.git
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Install dependencies:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Run the project:
 
 ```bash
-ng e2e
+npx ng serve
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Open:
 
-## Additional Resources
+```text
+http://localhost:4200
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## Why I Built This Project
+
+I created AgentHire AI as a portfolio project to explore the intersection between:
+
+- Frontend Development
+- Artificial Intelligence
+- Career Growth
+- User Experience Design
+
+The goal was to build a realistic AI-inspired application capable of helping users analyze opportunities and plan professional transitions.
+
+---
+
+## Author
+
+**Roberta Bianca**
+
+Travel Designer • Content Creator • Future Frontend Developer
+
+Rome, Italy
+
+LinkedIn: (aggiungeremo il link)
+GitHub: (aggiungeremo il link)
+
+---
+
+## Portfolio Presentation
+
+AgentHire AI demonstrates:
+
+- Angular Development
+- TypeScript Logic
+- Component Architecture
+- Routing
+- State Persistence with LocalStorage
+- UX/UI Design
+- Product Thinking
+- AI Workflow Design
+
+This project was built as a real-world portfolio application and is continuously evolving.

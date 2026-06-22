@@ -1,0 +1,56 @@
+<div class="page page--analysis">
+
+  <div class="page__header">
+    <span class="page__badge">
+      <span class="page__badge-dot"></span>
+      {{ mode === 'analysis' ? 'Analisi Candidatura AI' : 'Career Coach AI' }}
+    </span>
+    <h1 class="page__title">Nuova Analisi</h1>
+    <p class="page__desc" *ngIf="mode === 'analysis'">
+      Inserisci l'offerta di lavoro e il profilo del candidato. L'AI valuterà competenze,
+      esperienza e compatibilità con il ruolo in pochi secondi.
+    </p>
+    <p class="page__desc" *ngIf="mode === 'coach'">
+      Descrivi il tuo obiettivo professionale e il background attuale. L'AI costruirà
+      il tuo piano di crescita personalizzato con roadmap 30/60/90 giorni.
+    </p>
+  </div>
+
+  <!-- ── Mode selector ───────────────────────────────────────── -->
+  <div class="mode-selector">
+
+    <button
+      class="mode-card"
+      [class.mode-card--active]="mode === 'analysis'"
+      (click)="setMode('analysis')"
+      type="button"
+    >
+      <span class="mode-card__icon">◈</span>
+      <div class="mode-card__body">
+        <span class="mode-card__title">Analisi candidatura</span>
+        <span class="mode-card__desc">Valuta la compatibilità per un ruolo specifico</span>
+      </div>
+      <span class="mode-card__check" *ngIf="mode === 'analysis'">✓</span>
+    </button>
+
+    <button
+      class="mode-card"
+      [class.mode-card--active]="mode === 'coach'"
+      (click)="setMode('coach')"
+      type="button"
+    >
+      <span class="mode-card__icon">✦</span>
+      <div class="mode-card__body">
+        <span class="mode-card__title">Career Coach</span>
+        <span class="mode-card__desc">Pianifica il percorso verso il tuo obiettivo</span>
+      </div>
+      <span class="mode-card__check" *ngIf="mode === 'coach'">✓</span>
+    </button>
+
+  </div>
+
+  <!-- ── Form in base alla modalità ─────────────────────────── -->
+  <app-job-analysis-form  *ngIf="mode === 'analysis'" />
+  <app-career-coach-form  *ngIf="mode === 'coach'" />
+
+</div>

@@ -1,0 +1,229 @@
+<div class="page page--report">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       EMPTY STATE
+  ══════════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="!result">
+    <div class="empty-report">
+      <div class="empty-report__icon">✦</div>
+      <h2 class="empty-report__title">Nessuna analisi disponibile</h2>
+      <p class="empty-report__desc">
+        Avvia una nuova analisi per generare il tuo report di compatibilità candidatura.
+      </p>
+      <a routerLink="/new-analysis" class="btn btn--primary">
+        ✦ &nbsp;Avvia una nuova analisi <span class="btn__arrow">→</span>
+      </a>
+    </div>
+  </ng-container>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPORT
+  ══════════════════════════════════════════════════════════════ -->
+  <ng-container *ngIf="result">
+
+    <!-- ── 1. HEADER REPORT ──────────────────────────────────── -->
+    <header class="report-header">
+      <div class="report-header__left">
+        <span class="report-header__eyebrow">
+          <span class="mode-badge mode-badge--recruiting">🎯 Recruiting AI</span>
+          Report di Analisi
+        </span>
+        <h1 class="report-header__role">{{ result.application.role }}</h1>
+        <span class="report-header__date">
+          Generato il
+          {{ result.analyzedAt | date:'dd/MM/yyyy' }}
+          alle
+          {{ result.analyzedAt | date:'HH:mm' }}
+        </span>
+        <span class="sector-badge" *ngIf="result.detectedCategory">
+          ✦&nbsp; Settore rilevato: <strong>{{ result.detectedCategory }}</strong>
+        </span>
+      </div>
+      <a routerLink="/new-analysis" class="btn btn--new">
+        + Nuova analisi
+      </a>
+    </header>
+
+    <!-- ── 2. SCORE HERO ────────────────────────────────────── -->
+    <section class="score-hero">
+
+      <div class="score-hero__ring-area">
+        <div
+          class="score-ring"
+          [style.--score]="result.matchScore"
+          [style.--ring-color]="gradeColor"
+        >
+          <div class="score-ring__inner">
+            <span class="score-ring__value" [style.color]="gradeColor">
+              {{ result.matchScore }}
+            </span>
+            <span class="score-ring__pct">%</span>
+          </div>
+        </div>
+        <div class="score-hero__meta">
+          <span
+            class="grade-pill"
+            [ngClass]="'grade-pill--' + gradeCssClass"
+            [style.color]="gradeColor"
+            [style.borderColor]="gradeColor"
+          >
+            {{ gradeLabel }}
+          </span>
+          <p class="score-hero__caption">Compatibilità candidatura</p>
+        </div>
+      </div>
+
+      <div class="metrics-strip">
+        <div class="metric-tile">
+          <span class="metric-tile__value">{{ result.detectedSkills.length }}</span>
+          <span class="metric-tile__label">Competenze<br>rilevate</span>
+        </div>
+        <div class="metric-tile metric-tile--accent">
+          <span class="metric-tile__value" [style.color]="'#D4956A'">
+            {{ result.missingSkills.length }}
+          </span>
+          <span class="metric-tile__label">Lacune<br>trovate</span>
+        </div>
+        <div class="metric-tile">
+          <span class="metric-tile__value">{{ result.requiredSkills.length }}</span>
+          <span class="metric-tile__label">Competenze<br>richieste</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── 3. COMPETENZE / LACUNE ──────────────────────────── -->
+    <div class="skill-grid">
+
+      <div class="report-card">
+        <div class="report-card__head">
+          <span class="report-card__icon">✦</span>
+          <span class="report-card__label">Competenze rilevate</span>
+        </div>
+        <div class="chip-list">
+          <span
+            *ngFor="let skill of result.detectedSkills"
+            class="chip chip--detected"
+          >{{ skill }}</span>
+          <span *ngIf="result.detectedSkills.length === 0" class="chip-empty">
+            Nessuna competenza rilevata nel testo del CV.
+          </span>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-card__head">
+          <span class="report-card__icon">◈</span>
+          <span class="report-card__label">Lacune identificate</span>
+        </div>
+        <div class="chip-list">
+          <span
+            *ngFor="let skill of result.missingSkills"
+            class="chip chip--missing"
+          >{{ skill }}</span>
+          <span *ngIf="result.missingSkills.length === 0" class="chip-empty chip-empty--good">
+            Nessuna lacuna critica. Ottimo allineamento.
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── 4. KEYWORD CONSIGLIATE ──────────────────────────── -->
+    <div class="report-card report-card--full" *ngIf="keywordConsigliate.length > 0">
+      <div class="report-card__head">
+        <span class="report-card__icon">◈</span>
+        <span class="report-card__label">Keyword da aggiungere al CV</span>
+      </div>
+      <p class="report-card__hint">
+        Questi termini sono richiesti dall'offerta ma non figurano nel profilo attuale.
+        Aggiungerli aumenta la visibilità in screening automatici e recruiter tecnici.
+      </p>
+      <div class="chip-list">
+        <span
+          *ngFor="let kw of keywordConsigliate"
+          class="chip chip--keyword"
+        >
+          <span class="chip__plus">+</span>{{ kw }}
+        </span>
+      </div>
+    </div>
+
+    <!-- ── 5. INSIGHT AGENTI AI ────────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">✦</span>
+        <span class="report-card__label">Insights degli agenti AI</span>
+      </div>
+      <div class="insights-grid">
+        <div
+          *ngFor="let insight of result.agentInsights"
+          class="insight-card"
+        >
+          <span class="insight-card__icon">{{ insight.icon }}</span>
+          <div class="insight-card__body">
+            <span class="insight-card__name">{{ insight.agentName }}</span>
+            <p class="insight-card__text">{{ insight.summary }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 6. CHECKLIST CANDIDATURA ────────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">✦</span>
+        <span class="report-card__label">Checklist candidatura</span>
+      </div>
+      <ul class="checklist">
+        <li
+          *ngFor="let item of checklistCandidatura"
+          class="checklist-item"
+          [ngClass]="'checklist-item--' + item.priority"
+        >
+          <span class="checklist-item__dot"></span>
+          <span class="checklist-item__text">{{ item.text }}</span>
+          <span class="checklist-item__badge" *ngIf="item.priority === 'high'">
+            Priorità
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 7. SUGGERIMENTI PORTFOLIO ───────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">💼</span>
+        <span class="report-card__label">Suggerimenti portfolio</span>
+      </div>
+      <ul class="tip-list">
+        <li
+          *ngFor="let tip of result.portfolioSuggestions"
+          class="tip-list__item"
+        >
+          <span class="tip-list__dot"></span>
+          <span>{{ tip }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── 8. LETTERA DI PRESENTAZIONE ─────────────────────── -->
+    <div class="report-card report-card--full">
+      <div class="report-card__head">
+        <span class="report-card__icon">✉️</span>
+        <span class="report-card__label">Lettera di presentazione</span>
+        <button
+          class="copy-btn"
+          (click)="copyLetter()"
+          [class.copy-btn--copied]="copied"
+        >
+          {{ copied ? '✓ Copiata' : 'Copia testo' }}
+        </button>
+      </div>
+      <div class="letter-body">
+        <pre class="letter-body__text">{{ result.coverLetter }}</pre>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

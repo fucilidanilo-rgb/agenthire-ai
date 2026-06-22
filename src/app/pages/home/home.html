@@ -1,0 +1,210 @@
+<!-- ====== HERO ====== -->
+<section class="hero">
+
+  <!-- Sfondo cinematico CSS-only -->
+  <div class="hero__glow-orb" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <div class="hero__badge">
+      <span class="hero__badge-dot"></span>
+      AI Workspace · Recruiting & Career Coach
+    </div>
+
+    <h1 class="hero__title">
+      Il tuo lavoro,<br>
+      <span class="hero__gradient-text">analizzato dall'AI.</span>
+    </h1>
+
+    <p class="hero__subtitle">
+      Analizza candidature con precisione o pianifica la tua crescita professionale.
+      Quattro agenti AI lavorano in parallelo — competenze, compatibilità, strategia —
+      in meno di trenta secondi.
+    </p>
+
+    <div class="hero__actions">
+      <a routerLink="/new-analysis" class="btn btn--primary">
+        Analisi candidatura <span class="btn__arrow">→</span>
+      </a>
+      <a routerLink="/new-analysis" [queryParams]="{mode:'coach'}" class="btn btn--ghost">Career Coach AI</a>
+    </div>
+
+    <div class="hero__stats">
+      <div class="hero__stat">
+        <span class="hero__stat-value">4</span>
+        <span class="hero__stat-label">Agenti AI</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-value">2</span>
+        <span class="hero__stat-label">Modalità</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-value">&lt;30s</span>
+        <span class="hero__stat-label">Analisi</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-value">6</span>
+        <span class="hero__stat-label">Settori</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== DUE MODALITÀ — Premium Cards ====== -->
+<section class="premium-modes">
+  <div class="premium-modes__grid">
+
+    <!-- Card 1: Analisi candidatura -->
+    <div class="premium-mode-card">
+      <div class="premium-mode-card__badge premium-mode-card__badge--recruiting">Recruiting AI</div>
+      <div class="premium-mode-card__icon">🎯</div>
+      <h3 class="premium-mode-card__title">Analisi candidatura</h3>
+      <p class="premium-mode-card__desc">
+        Analizza CV, job description, compatibilità, skill gap e genera una cover letter personalizzata.
+      </p>
+      <a routerLink="/new-analysis" class="premium-mode-card__cta">
+        Avvia analisi <span>→</span>
+      </a>
+    </div>
+
+    <!-- Card 2: Career Coach -->
+    <div class="premium-mode-card premium-mode-card--coach">
+      <div class="premium-mode-card__badge premium-mode-card__badge--coach">Career Coach AI</div>
+      <div class="premium-mode-card__icon">🚀</div>
+      <h3 class="premium-mode-card__title">Career Coach</h3>
+      <p class="premium-mode-card__desc">
+        Genera skill trasferibili, roadmap 30/60/90 giorni, strategia portfolio e piano carriera.
+      </p>
+      <a routerLink="/new-analysis" [queryParams]="{mode:'coach'}" class="premium-mode-card__cta premium-mode-card__cta--coach">
+        Costruisci il mio piano <span>→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== DETTAGLIO MODALITÀ ====== -->
+<section class="section section--divided modes-section">
+  <div class="section__header">
+    <span class="section__label">Modalità</span>
+    <h2 class="section__title">Due modalità. Un solo obiettivo.</h2>
+    <p class="section__subtitle">Scegli il percorso più adatto al tuo momento professionale.</p>
+  </div>
+
+  <div class="modes-grid">
+
+    <!-- Card 1: Recruiting AI -->
+    <div class="mode-feature-card">
+      <div class="mode-feature-card__top">
+        <span class="mode-feature-card__pill mode-feature-card__pill--recruiting">Recruiting AI</span>
+        <span class="mode-feature-card__icon">🎯</span>
+      </div>
+      <h3 class="mode-feature-card__title">Recruiting AI</h3>
+      <p class="mode-feature-card__lead">Per chi ha un ruolo specifico da valutare.</p>
+      <ul class="mode-feature-card__list">
+        <li>Analisi CV e Job Description</li>
+        <li>Score di compatibilità</li>
+        <li>Skill gap identificati</li>
+        <li>Cover letter personalizzata</li>
+        <li>Checklist candidatura</li>
+      </ul>
+      <a routerLink="/new-analysis" class="mode-feature-card__cta">
+        Analizza candidatura <span class="mode-feature-card__arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Card 2: Career Coach AI -->
+    <div class="mode-feature-card mode-feature-card--coach">
+      <div class="mode-feature-card__top">
+        <span class="mode-feature-card__pill mode-feature-card__pill--coach">Career Coach AI</span>
+        <span class="mode-feature-card__icon">🚀</span>
+      </div>
+      <h3 class="mode-feature-card__title">Career Coach AI</h3>
+      <p class="mode-feature-card__lead">Per chi vuole pianificare la propria crescita.</p>
+      <ul class="mode-feature-card__list">
+        <li>Skill trasferibili rilevate</li>
+        <li>Piano 30 / 60 / 90 giorni</li>
+        <li>Strategia portfolio</li>
+        <li>Roadmap di carriera</li>
+        <li>Insight motivazionale AI</li>
+      </ul>
+      <a routerLink="/new-analysis" [queryParams]="{mode:'coach'}" class="mode-feature-card__cta mode-feature-card__cta--coach">
+        Costruisci il mio piano <span class="mode-feature-card__arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== COME FUNZIONA ====== -->
+<section class="section section--divided">
+  <div class="section__header">
+    <span class="section__label">Processo</span>
+    <h2 class="section__title">Come funziona</h2>
+    <p class="section__subtitle">Tre passaggi. Nessuna configurazione. Risultati immediati.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-card__num">01</div>
+      <div class="step-card__icon">📋</div>
+      <h3 class="step-card__title">Incolla l'offerta</h3>
+      <p class="step-card__desc">Job description e CV del candidato. L'analisi inizia in automatico, senza configurazione manuale.</p>
+    </div>
+
+    <div class="steps__arrow">→</div>
+
+    <div class="step-card">
+      <div class="step-card__num">02</div>
+      <div class="step-card__icon">✦</div>
+      <h3 class="step-card__title">Gli agenti lavorano</h3>
+      <p class="step-card__desc">Quattro agenti in parallelo: competenze, compatibilità, portfolio e tono. Zero attese, zero soggettività.</p>
+    </div>
+
+    <div class="steps__arrow">→</div>
+
+    <div class="step-card">
+      <div class="step-card__num">03</div>
+      <div class="step-card__icon">◈</div>
+      <h3 class="step-card__title">Agisci con dati</h3>
+      <p class="step-card__desc">Punteggio di match, lacune identificate, lettera di presentazione generata. Tutto pronto per decidere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== AGENTI AI ====== -->
+<section class="section section--divided agents-section">
+  <div class="section__header">
+    <span class="section__label">Agenti</span>
+    <h2 class="section__title">Quattro agenti, una sola pipeline</h2>
+    <p class="section__subtitle">Ogni agente è ottimizzato per un'analisi specifica. Insieme coprono l'intero processo di valutazione.</p>
+  </div>
+
+  <div class="agents-grid">
+    <div class="agent-card">
+      <div class="agent-card__icon">🔍</div>
+      <h3 class="agent-card__title">Agente Analista</h3>
+      <p class="agent-card__desc">Legge la job description ed estrae competenze richieste, livelli d'esperienza e aspettative culturali con alta precisione.</p>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card__icon">◈</div>
+      <h3 class="agent-card__title">Agente Matching</h3>
+      <p class="agent-card__desc">Confronta il profilo del candidato con i requisiti del ruolo. Produce un punteggio di compatibilità su scala 0–100.</p>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card__icon">💼</div>
+      <h3 class="agent-card__title">Agente Portfolio</h3>
+      <p class="agent-card__desc">Valuta repository, siti personali e progetti passati per verificare l'esperienza concreta oltre il CV scritto.</p>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card__icon">✉️</div>
+      <h3 class="agent-card__title">Agente Lettera</h3>
+      <p class="agent-card__desc">Genera una lettera di presentazione calibrata sui punti di forza reali del candidato rispetto al ruolo specifico.</p>
+    </div>
+  </div>
+</section>

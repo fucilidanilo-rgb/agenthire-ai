@@ -1,0 +1,388 @@
+// Shared form styles — light premium.
+// Usato da job-analysis-form e career-coach-form via @include.
+
+@mixin form-styles {
+
+  @keyframes icon-glow {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1;   }
+  }
+
+  @keyframes dot-breathe {
+    0%, 100% { opacity: 1;    transform: scale(1);    }
+    50%       { opacity: 0.4; transform: scale(0.7);  }
+  }
+
+  @keyframes fade-slide-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // FORM CARD
+  // ────────────────────────────────────────────────────────────
+
+  .form-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(212, 184, 160, 0.5);
+    border-radius: 20px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 1px 3px rgba(139, 99, 85, 0.05),
+      0 8px 32px rgba(139, 99, 85, 0.07);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(196, 149, 106, 0.35) 32%,
+        rgba(212, 184, 160, 0.22) 68%,
+        transparent 100%
+      );
+    }
+
+    &__header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    &__header-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__icon {
+      font-size: 1rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 0.3rem;
+      color: rgba(196, 149, 106, 0.6);
+      transition: color 0.4s ease;
+
+      &--active {
+        color: #C4956A;
+        animation: icon-glow 2.5s ease-in-out infinite;
+      }
+    }
+
+    &__title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.015em;
+    }
+
+    &__subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    &__divider {
+      height: 1px;
+      background: rgba(212, 184, 160, 0.45);
+      margin: -0.25rem 0;
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding-top: 0.25rem;
+    }
+
+    &__note {
+      font-size: 0.78rem;
+      color: #7A5234;
+      padding-left: 0.2rem;
+      font-weight: 400;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // FORM LAYOUT
+  // ────────────────────────────────────────────────────────────
+
+  .form-row {
+    display: flex;
+    gap: 1.25rem;
+
+    &--2col > .form-field {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // FORM FIELD
+  // ────────────────────────────────────────────────────────────
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+
+    &__label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #4A2E22;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    &__required {
+      color: #C4956A;
+      margin-left: 0.2rem;
+    }
+
+    &__input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    &__prefix-icon {
+      position: absolute;
+      left: 0.9rem;
+      font-size: 0.9rem;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.4;
+    }
+
+    &__input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.6rem;
+      background: #FAFAF7;
+      border: 1px solid rgba(212, 184, 160, 0.65);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-family: 'DM Sans', inherit;
+      font-weight: 400;
+      line-height: 1.5;
+      transition: border-color 0.22s, box-shadow 0.22s;
+      outline: none;
+
+      &::placeholder { color: #6B4A3A; }
+      &:hover        { border-color: rgba(184, 171, 152, 0.9); }
+      &:focus {
+        background: #FFFFFF;
+        border-color: var(--cool-border);
+        box-shadow: 0 0 0 3px var(--cool-glow);
+      }
+    }
+
+    &__textarea {
+      width: 100%;
+      padding: 0.88rem 1rem;
+      background: #FAFAF7;
+      border: 1px solid rgba(212, 184, 160, 0.65);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-family: 'DM Sans', inherit;
+      font-weight: 400;
+      line-height: 1.72;
+      resize: vertical;
+      min-height: 132px;
+      transition: border-color 0.22s, box-shadow 0.22s;
+      outline: none;
+
+      &::placeholder { color: #6B4A3A; }
+      &:hover        { border-color: rgba(184, 171, 152, 0.9); }
+      &:focus {
+        background: #FFFFFF;
+        border-color: var(--cool-border);
+        box-shadow: 0 0 0 3px var(--cool-glow);
+      }
+    }
+
+    &__hint {
+      font-size: 0.8rem;
+      color: #5C3D2E;
+      padding-left: 0.2rem;
+      font-weight: 400;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // ERROR
+  // ────────────────────────────────────────────────────────────
+
+  .form-profile-error {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: rgba(180, 60, 40, 0.82);
+    padding: 0.5rem 0.75rem;
+    background: rgba(200, 70, 50, 0.05);
+    border: 1px solid rgba(200, 70, 50, 0.18);
+    border-radius: 8px;
+    margin-top: 0.35rem;
+    animation: fade-slide-in 0.22s ease;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // SUBMIT BUTTON — Ambra → Cognac
+  // ────────────────────────────────────────────────────────────
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.88rem 2rem;
+    background: linear-gradient(
+      135deg,
+      #E8C9A0 0%,    /* Ambra */
+      #C4956A 100%   /* Cognac */
+    );
+    color: #2C1F1A;   /* Notte */
+    font-size: 0.92rem;
+    font-weight: 500;
+    font-family: 'DM Sans', inherit;
+    border: 1px solid rgba(196, 149, 106, 0.35);
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow:
+      0 2px 12px rgba(196, 149, 106, 0.18),
+      inset 0 1px 0 rgba(255, 248, 230, 0.35);
+    transition: all 0.26s ease;
+    white-space: nowrap;
+    letter-spacing: 0.015em;
+
+    &__icon  { font-size: 0.78rem; opacity: 0.65; }
+    &__arrow { font-size: 1rem; transition: transform 0.22s ease; }
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(
+        135deg,
+        #D4A878 0%,
+        #A07848 100%
+      );
+      box-shadow:
+        0 4px 20px rgba(196, 149, 106, 0.25),
+        inset 0 1px 0 rgba(255, 245, 220, 0.25);
+      transform: translateY(-1px);
+
+      .submit-btn__arrow { transform: translateX(5px); }
+    }
+
+    &:active:not(:disabled) { transform: translateY(0); }
+
+    &:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // FORM INNER WRAPPER
+  // ────────────────────────────────────────────────────────────
+
+  .form-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // WORKFLOW COUNTER
+  // ────────────────────────────────────────────────────────────
+
+  .workflow-counter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.1rem;
+    margin-left: auto;
+    flex-shrink: 0;
+
+    &__value {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #A07848;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      transition: all 0.35s ease;
+    }
+
+    &__sep {
+      font-size: 0.85rem;
+      color: rgba(139, 99, 85, 0.4);
+      font-weight: 400;
+      margin-left: 0.05rem;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // WORKFLOW — label + lista agenti
+  // ────────────────────────────────────────────────────────────
+
+  .workflow {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    animation: fade-slide-in 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &__label {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: rgba(139, 99, 85, 0.72);
+      letter-spacing: 0.015em;
+    }
+
+    &__label-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #C4956A;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px rgba(196, 149, 106, 0.5);
+      animation: dot-breathe 1.8s ease-in-out infinite;
+    }
+
+    &__agents {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // RESPONSIVE
+  // ────────────────────────────────────────────────────────────
+
+  @media (max-width: 640px) {
+    .form-card {
+      padding: 1.75rem 1.25rem;
+      border-radius: 16px;
+      gap: 1.4rem;
+    }
+
+    .form-row--2col { flex-direction: column; }
+    .form-inner { gap: 1.4rem; }
+  }
+
+} // end mixin form-styles
