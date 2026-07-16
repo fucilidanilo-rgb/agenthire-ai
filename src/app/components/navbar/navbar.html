@@ -4,7 +4,20 @@
     <span class="navbar__name">AgentHire <em>AI</em></span>
   </div>
 
-  <ul class="navbar__links">
+  <button
+    type="button"
+    class="navbar__toggle"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="menuOpen"
+    aria-controls="navbar-menu"
+    [attr.aria-label]="menuOpen ? 'Chiudi menu' : 'Apri menu'"
+  >
+    <span class="navbar__toggle-bar"></span>
+    <span class="navbar__toggle-bar"></span>
+    <span class="navbar__toggle-bar"></span>
+  </button>
+
+  <ul id="navbar-menu" class="navbar__links" [class.navbar__links--open]="menuOpen">
     <li>
       <a routerLink="/home" routerLinkActive="active">Home</a>
     </li>

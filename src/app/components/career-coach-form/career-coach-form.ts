@@ -63,6 +63,22 @@ export class CareerCoachFormComponent {
     return this.agentStatuses.filter(s => s === 'completed').length;
   }
 
+  get progressPercent(): number {
+    const working = this.agentStatuses.filter(s => s === 'working').length;
+    return ((this.completedCount + working * 0.5) / this.agents.length) * 100;
+  }
+
+  get statusAnnouncement(): string {
+    const activeIndex = this.agentStatuses.findIndex(s => s === 'working');
+    if (activeIndex >= 0) {
+      return `Fase ${activeIndex + 1} di ${this.agents.length}: ${this.agents[activeIndex].name} in corso.`;
+    }
+    if (this.completedCount === this.agents.length) {
+      return 'Piano completato. Apertura del report in corso.';
+    }
+    return 'Avvio elaborazione in corso.';
+  }
+
   get isFormValid(): boolean {
     return !!this.goal.trim() && !!this.background.trim() && !!this.currentSkills.trim();
   }
@@ -91,10 +107,11 @@ export class CareerCoachFormComponent {
   }
 
   private async runWorkflow(): Promise<void> {
-    const durations = [1300, 1400, 1200, 1300];
+    // Durata totale ~4.5s (rispetta il target di 3-5s per il loader premium)
+    const durations = [900, 950, 850, 900];
 
     for (let i = 0; i < this.agents.length; i++) {
-      if (i > 0) await this.sleep(220);
+      if (i > 0) await this.sleep(180);
 
       this.agentStatuses = this.agentStatuses.map(
         (s, j): AgentStatus => (j === i ? 'working' : s),
@@ -109,7 +126,7 @@ export class CareerCoachFormComponent {
       this.cdr.detectChanges();
     }
 
-    await this.sleep(500);
+    await this.sleep(400);
   }
 
   private sleep(ms: number): Promise<void> {

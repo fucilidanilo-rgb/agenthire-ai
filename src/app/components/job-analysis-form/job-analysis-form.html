@@ -105,7 +105,7 @@
         <button
           type="submit"
           class="submit-btn"
-          [disabled]="!role.trim() || !jobOffer.trim()"
+          [disabled]="!role.trim() || !jobOffer.trim() || loading"
         >
           <span class="submit-btn__icon">✦</span>
           Avvia l'analisi AI
@@ -121,12 +121,17 @@
   </ng-container>
 
   <!-- ── Workflow agenti ────────────────────────────────────── -->
-  <div class="workflow" *ngIf="showWorkflow">
+  <div class="workflow" *ngIf="showWorkflow" role="status" aria-live="polite">
 
     <p class="workflow__label">
       <span class="workflow__label-dot"></span>
-      Gli agenti stanno analizzando la candidatura...
+      Gli agenti AI stanno analizzando la candidatura
+      <span class="sr-only">{{ statusAnnouncement }}</span>
     </p>
+
+    <div class="workflow__progress-track">
+      <div class="workflow__progress-bar" [style.width.%]="progressPercent"></div>
+    </div>
 
     <div class="workflow__agents">
       <app-agent-card

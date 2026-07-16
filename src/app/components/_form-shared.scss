@@ -368,6 +368,21 @@
       flex-direction: column;
       gap: 0.6rem;
     }
+
+    &__progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(212, 184, 160, 0.3);
+      overflow: hidden;
+    }
+
+    &__progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #E8C9A0 0%, #C4956A 100%);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   }
 
   // ────────────────────────────────────────────────────────────

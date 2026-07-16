@@ -38,22 +38,22 @@ export class JobAnalysisFormComponent {
     {
       name: 'Analista Offerta',
       icon: '🔍',
-      description: 'Estrae competenze, seniority e keyword dalla job offer.',
+      description: 'Analisi dei requisiti e delle competenze richieste.',
     },
     {
       name: 'Analista CV',
       icon: '◈',
-      description: 'Confronta profilo candidato e requisiti della posizione.',
+      description: 'Rilevamento delle competenze e delle esperienze.',
     },
     {
-      name: 'Stratega Portfolio',
+      name: 'Skill Matcher',
       icon: '💼',
-      description: 'Suggerisce progetti e miglioramenti da valorizzare.',
+      description: 'Confronto tra profilo e posizione.',
     },
     {
       name: 'Copywriter Candidatura',
       icon: '✉️',
-      description: 'Prepara una lettera motivazionale coerente con il ruolo.',
+      description: 'Preparazione del report e della lettera.',
     },
   ];
 
@@ -65,6 +65,22 @@ export class JobAnalysisFormComponent {
 
   get completedCount(): number {
     return this.agentStatuses.filter(s => s === 'completed').length;
+  }
+
+  get progressPercent(): number {
+    const working = this.agentStatuses.filter(s => s === 'working').length;
+    return ((this.completedCount + working * 0.5) / this.agents.length) * 100;
+  }
+
+  get statusAnnouncement(): string {
+    const activeIndex = this.agentStatuses.findIndex(s => s === 'working');
+    if (activeIndex >= 0) {
+      return `Fase ${activeIndex + 1} di ${this.agents.length}: ${this.agents[activeIndex].name} in corso.`;
+    }
+    if (this.completedCount === this.agents.length) {
+      return 'Analisi completata. Apertura del report in corso.';
+    }
+    return 'Avvio analisi in corso.';
   }
 
   onProfileChange(profile: CandidateProfile): void {
@@ -107,11 +123,12 @@ export class JobAnalysisFormComponent {
 
   private async runWorkflow(): Promise<void> {
     // Ogni agente resta "In analisi" abbastanza a lungo da essere visto
-    const durations: number[] = [1200, 1300, 1100, 1200]; // ms per ogni agente
+    // Durata totale ~4.3s (rispetta il target di 3-5s per il loader premium)
+    const durations: number[] = [850, 900, 800, 850]; // ms per ogni agente
 
     for (let i = 0; i < this.agents.length; i++) {
       if (i > 0) {
-        await this.sleep(220); // breve pausa prima che parta il prossimo
+        await this.sleep(180); // breve pausa prima che parta il prossimo
       }
 
       // Crea NUOVO array → Angular rileva certamente il cambio riferimento
@@ -128,7 +145,7 @@ export class JobAnalysisFormComponent {
       this.cdr.detectChanges();
     }
 
-    await this.sleep(500); // pausa finale: tutti completati prima del redirect
+    await this.sleep(400); // pausa finale: tutti completati prima del redirect
   }
 
   private sleep(ms: number): Promise<void> {
