@@ -212,30 +212,16 @@ The goal was to build a realistic AI-inspired application capable of helping use
 
 ---
 
-## Author
+## 👥 Autori
 
-**Roberta Bianca**
+AgentHire AI è stato progettato e sviluppato congiuntamente da:
 
-Travel Designer • Content Creator • Future Frontend Developer
+- **Danilo Fucili** — [GitHub](https://github.com/fucilidanilo-rgb)
+- **Roberta Bianca** — [GitHub](https://github.com/robertanbainca)
 
-Rome, Italy
+Il progetto nasce da una collaborazione condivisa, dalla fase di ideazione fino allo sviluppo dell’interfaccia, delle funzionalità Angular e del workflow di analisi delle candidature.
+## 🤝 Collaborazione
 
-LinkedIn: (aggiungeremo il link)
-GitHub: (aggiungeremo il link)
+Entrambi gli autori hanno contribuito alla realizzazione del progetto, occupandosi di progettazione, sviluppo, test e miglioramento dell’esperienza utente.
 
----
-
-## Portfolio Presentation
-
-AgentHire AI demonstrates:
-
-- Angular Development
-- TypeScript Logic
-- Component Architecture
-- Routing
-- State Persistence with LocalStorage
-- UX/UI Design
-- Product Thinking
-- AI Workflow Design
-
-This project was built as a real-world portfolio application and is continuously evolving.
+Il repository presente su questo profilo è un fork del repository originale, ma il progetto è stato sviluppato congiuntamente da entrambi gli autori.
