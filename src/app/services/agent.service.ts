@@ -1,8 +1,14 @@
-import { Injectable } from '@angular/core';
+
+import { Injectable, inject } from '@angular/core';
+import { AuthService } from './auth.service';
 import { JobApplication } from '../models/job-application.model';
 import { AnalysisResult, AnalysisGrade } from '../models/analysis-result.model';
 import { AgentInsight } from '../models/agent.model';
-import { CareerCoachInput, CareerCoachResult, RoadmapItem } from '../models/career-coach.model';
+import {
+  CareerCoachInput,
+  CareerCoachResult,
+  RoadmapItem
+} from '../models/career-coach.model';
 import {
   CategoryId,
   detectCategory,
@@ -12,58 +18,65 @@ import {
   getAllCategorySkillNames,
 } from '../utils/career-categories';
 
-// ─── localStorage keys ───────────────────────────────────────────────────────
-const LS_ANALYSIS_KEY = 'ah_analysis_history';
-const LS_COACH_KEY    = 'ah_coach_history';
-const LS_MAX_ITEMS    = 20;
+// ─── localStorage keys ───────────────────────────────────────
 
-// ─── Tech project ideas ──────────────────────────────────────────────────────
+const LS_ANALYSIS_KEY = 'ah_analysis_history';
+const LS_COACH_KEY = 'ah_coach_history';
+const LS_MAX_ITEMS = 20;
+
+// ─── Tech project ideas ──────────────────────────────────────
+
 const TECH_PROJECT_IDEAS: Record<string, string> = {
-  'Angular':          'Crea una SPA Angular con lazy loading, routing guards e stato gestito con NgRx.',
-  'React':            "Sviluppa un'app React con hooks personalizzati, Context API e test con React Testing Library.",
-  'Vue':              "Costruisci un'app Vue 3 con Composition API, Pinia come store e TypeScript strict.",
-  'TypeScript':       'Implementa una libreria TypeScript con generics avanzati, utility types e documentazione JSDoc.',
-  'Node.js':          "Sviluppa un'API REST con Node.js, autenticazione JWT e documentazione Swagger/OpenAPI.",
-  'Python':           "Crea uno script di automazione dati o un'API REST con FastAPI e validazione Pydantic.",
-  'Docker':           'Containerizza una web app fullstack e configura docker-compose per ambienti dev e prod.',
-  'Kubernetes':       'Crea un cluster Kubernetes locale con Minikube, deploy multi-container e Helm chart.',
-  'AWS':              "Fai il deploy di un'app serverless su AWS Lambda con API Gateway e CI/CD pipeline.",
-  'GCP':              'Implementa un progetto su Google Cloud con Cloud Run, Firestore e autenticazione Google.',
-  'Azure':            "Crea un'app su Azure App Service con Azure DevOps per build e deploy automatico.",
-  'CI/CD':            'Configura una pipeline GitHub Actions completa: lint, test, build, Docker push e deploy.',
-  'SQL':              'Progetta un database relazionale con schema normalizzato, query ottimizzate e viste materializzate.',
-  'PostgreSQL':       "Costruisci un'app con PostgreSQL: indici avanzati, full-text search e aggregazioni complesse.",
-  'MongoDB':          "Sviluppa un'API REST con Express e MongoDB usando Mongoose, validazione e aggregation pipeline.",
-  'Firebase':         "Crea un'app real-time con Firebase Realtime DB o Firestore, auth e Cloud Functions.",
-  'GraphQL':          'Implementa un server GraphQL con Apollo Server, subscriptions real-time e DataLoader per batching.',
-  'REST API':         'Crea una REST API documentata con rate limiting, autenticazione, versioning e test di integrazione.',
+  'Angular': 'Crea una SPA Angular con lazy loading, routing guards e stato gestito con NgRx.',
+  'React': "Sviluppa un'app React con hooks personalizzati, Context API e test con React Testing Library.",
+  'Vue': "Costruisci un'app Vue 3 con Composition API, Pinia come store e TypeScript strict.",
+  'TypeScript': 'Implementa una libreria TypeScript con generics avanzati, utility types e documentazione JSDoc.',
+  'Node.js': "Sviluppa un'API REST con Node.js, autenticazione JWT e documentazione Swagger/OpenAPI.",
+  'Python': "Crea uno script di automazione dati o un'API REST con FastAPI e validazione Pydantic.",
+  'Docker': 'Containerizza una web app fullstack e configura docker-compose per ambienti dev e prod.',
+  'Kubernetes': 'Crea un cluster Kubernetes locale con Minikube, deploy multi-container e Helm chart.',
+  'AWS': "Fai il deploy di un'app serverless su AWS Lambda con API Gateway e CI/CD pipeline.",
+  'GCP': 'Implementa un progetto su Google Cloud con Cloud Run, Firestore e autenticazione Google.',
+  'Azure': "Crea un'app su Azure App Service con Azure DevOps per build e deploy automatico.",
+  'CI/CD': 'Configura una pipeline GitHub Actions completa: lint, test, build, Docker push e deploy.',
+  'SQL': 'Progetta un database relazionale con schema normalizzato, query ottimizzate e viste materializzate.',
+  'PostgreSQL': "Costruisci un'app con PostgreSQL: indici avanzati, full-text search e aggregazioni complesse.",
+  'MongoDB': "Sviluppa un'API REST con Express e MongoDB usando Mongoose, validazione e aggregation pipeline.",
+  'Firebase': "Crea un'app real-time con Firebase Realtime DB o Firestore, auth e Cloud Functions.",
+  'GraphQL': 'Implementa un server GraphQL con Apollo Server, subscriptions real-time e DataLoader per batching.',
+  'REST API': 'Crea una REST API documentata con rate limiting, autenticazione, versioning e test di integrazione.',
   'Machine Learning': "Addestra un modello ML per classificazione o regressione e pubblicalo tramite un'API FastAPI.",
-  'Deep Learning':    'Costruisci e addestra una rete neurale con PyTorch o TensorFlow su un dataset pubblico.',
+  'Deep Learning': 'Costruisci e addestra una rete neurale con PyTorch o TensorFlow su un dataset pubblico.',
   'Prompt Engineering': "Costruisci un'app che usa LLM con tecniche di prompting avanzate e chain of thought.",
-  'TDD':              'Implementa un modulo da zero seguendo il ciclo TDD red-green-refactor con copertura >90%.',
-  'Microservices':    'Architetta un sistema a microservizi con comunicazione via REST/gRPC e service discovery.',
+  'TDD': 'Implementa un modulo da zero seguendo il ciclo TDD red-green-refactor con copertura >90%.',
+  'Microservices': 'Architetta un sistema a microservizi con comunicazione via REST/gRPC e service discovery.',
+
   // Content Creator / Specialist skill suggestions
-  'Content Strategy':   'Sviluppa una content strategy per un brand o progetto: obiettivi, target, piano editoriale e metriche di successo.',
-  'Copywriting':        'Scrivi 5 copy diversi (headline, email, social post, landing page, descrizione prodotto) e documentali come portfolio.',
-  'Brand Voice':        'Definisci la brand voice per un brand esistente o fittizio: tono, valori, do/don\'t con esempi concreti.',
+
+  'Content Strategy': 'Sviluppa una content strategy per un brand o progetto: obiettivi, target, piano editoriale e metriche di successo.',
+  'Copywriting': 'Scrivi 5 copy diversi (headline, email, social post, landing page, descrizione prodotto) e documentali come portfolio.',
+  'Brand Voice': "Definisci la brand voice per un brand esistente o fittizio: tono, valori, do/don't con esempi concreti.",
   'Editorial Planning': 'Costruisci un piano editoriale mensile con topic pillar, formato, canale e obiettivo per ogni contenuto.',
-  'Storytelling':       'Scrivi 3 case study di storytelling aziendale: problema, soluzione, risultato con dati reali o simulati.',
-  'Social Media':       'Crea un piano social su 30 giorni con contenuti, caption e obiettivi di engagement per ogni post.',
-  'Analytics':          "Analizza le performance di una pagina/canale reale o di test e produci un report con insight e raccomandazioni.",
+  'Storytelling': 'Scrivi 3 case study di storytelling aziendale: problema, soluzione, risultato con dati reali o simulati.',
+  'Social Media': 'Crea un piano social su 30 giorni con contenuti, caption e obiettivi di engagement per ogni post.',
+  'Analytics': "Analizza le performance di una pagina/canale reale o di test e produci un report con insight e raccomandazioni.",
   'Community Management': 'Gestisci una community reale o fittizia per 30 giorni: definisci linee guida, moderazione e piano di engagement.',
-  'Newsletter':         'Progetta e lancia una newsletter: template, contenuto editoriale, call-to-action e piano di crescita abbonati.',
-  'SEO':                'Conduci un audit SEO di un sito reale: keyword research, analisi on-page e piano di ottimizzazione.',
+  'Newsletter': 'Progetta e lancia una newsletter: template, contenuto editoriale, call-to-action e piano di crescita abbonati.',
+  'SEO': 'Conduci un audit SEO di un sito reale: keyword research, analisi on-page e piano di ottimizzazione.',
+
   // Marketing skill suggestions
-  'Digital Marketing':  'Progetta una campagna digital end-to-end: obiettivo, canali, budget simulato, creatività e metriche.',
-  'Email Marketing':    'Crea una sequenza email di 5 messaggi per un funnel reale: benvenuto, nurturing, offerta, follow-up.',
-  'Campaign Management':'Documenta la gestione di una campagna: brief, pianificazione, esecuzione, risultati e ottimizzazioni.',
-  'Google Analytics':   'Configura GA4 su un sito reale o di test, definisci eventi key e produci un report mensile.',
-  'Content Marketing':  'Sviluppa una strategia di content marketing con 3 formati diversi e misura le performance su 30 giorni.',
-  'Brand Strategy':     "Crea un documento di brand strategy per un'azienda: positioning, proposta di valore, tone of voice e visual direction.",
-  'A/B Testing':        'Progetta e documenta un A/B test su email subject line, landing page o CTA con ipotesi e risultati.',
+
+  'Digital Marketing': 'Progetta una campagna digital end-to-end: obiettivo, canali, budget simulato, creatività e metriche.',
+  'Email Marketing': 'Crea una sequenza email di 5 messaggi per un funnel reale: benvenuto, nurturing, offerta, follow-up.',
+  'Campaign Management': 'Documenta la gestione di una campagna: brief, pianificazione, esecuzione, risultati e ottimizzazioni.',
+  'Google Analytics': 'Configura GA4 su un sito reale o di test, definisci eventi key e produci un report mensile.',
+  'Content Marketing': 'Sviluppa una strategia di content marketing con 3 formati diversi e misura le performance su 30 giorni.',
+  'Brand Strategy': "Crea un documento di brand strategy per un'azienda: positioning, proposta di valore, tone of voice e visual direction.",
+  'A/B Testing': 'Progetta e documenta un A/B test su email subject line, landing page o CTA con ipotesi e risultati.',
 };
 
-// ─── Category-specific portfolio extras ─────────────────────────────────────
+// ─── Category-specific portfolio extras ─────────────────────
+
 const CATEGORY_PORTFOLIO_EXTRAS: Record<string, string[]> = {
   'tech': [
     'Inserisci metriche concrete nei README: performance, copertura test, riduzione bug.',
@@ -91,12 +104,13 @@ const CATEGORY_PORTFOLIO_EXTRAS: Record<string, string[]> = {
   ],
   'general-business': [
     'Documenta un progetto gestito: obiettivi, team, timeline e risultati.',
-    "Crea una presentazione executive che mostri le tue capacità comunicative.",
-    'Pubblica un case study di problem solving con impatto misurabile sul business.',
+    "Pubblica un case study di problem solving con impatto misurabile sul business.",
+    'Crea una presentazione executive che mostri le tue capacità comunicative.',
   ],
 };
 
-// ─── Career Coach: roadmaps ──────────────────────────────────────────────────
+// ─── Career Coach: roadmaps ──────────────────────────────────
+
 const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
   'tech': [
     {
@@ -122,11 +136,12 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
       actions: [
         'Costruisci un progetto fullstack con frontend + API + database',
         'Prepara portfolio con 3 progetti documentati con case study e metriche',
-        'Fai networking attivo: LinkedIn, community tech, eventi o hackathon locali',
+        'Fai networking attivo su LinkedIn, community tech, eventi o hackathon locali',
         'Candida per i primi ruoli junior o inizia a fare colloqui di pratica',
       ],
     },
   ],
+
   'marketing': [
     {
       period: '30 giorni',
@@ -156,11 +171,12 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
       ],
     },
   ],
+
   'content-creator': [
     {
       period: '30 giorni',
       actions: [
-        "Definisci la tua nicchia di contenuto e il tuo stile comunicativo unico",
+        'Definisci la tua nicchia di contenuto e il tuo stile comunicativo unico',
         'Pubblica almeno 12 contenuti sulla piattaforma primaria (TikTok, Instagram o YouTube)',
         "Studia l'algoritmo della piattaforma scelta e configura le analytics",
         'Inizia a sviluppare il tuo tono di voce e visual identity coerente',
@@ -185,6 +201,7 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
       ],
     },
   ],
+
   'design-ux': [
     {
       period: '30 giorni',
@@ -214,6 +231,7 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
       ],
     },
   ],
+
   'travel-hospitality': [
     {
       period: '30 giorni',
@@ -243,6 +261,7 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
       ],
     },
   ],
+
   'general-business': [
     {
       period: '30 giorni',
@@ -259,7 +278,7 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
         'Completa un corso di analisi dati business (Google Data Studio o Power BI)',
         'Documenta una situazione reale di problem solving come case study strutturato',
         'Fai networking attivo su LinkedIn nei gruppi del settore target',
-        'Cerca un mentore nel settore tramite ADPList o LinkedIn outreach mirato',
+        'Cerca un mentore nel settore tramite ADPList (gratuito e accessibile)',
       ],
     },
     {
@@ -274,7 +293,8 @@ const COACH_ROADMAPS: Record<CategoryId, RoadmapItem[]> = {
   ],
 };
 
-// ─── Career Coach: azioni prioritarie ───────────────────────────────────────
+// ─── Career Coach: azioni prioritarie ────────────────────────
+
 const COACH_PRIORITY_ACTIONS: Record<CategoryId, string[]> = {
   'tech': [
     'Costruisci il tuo GitHub con almeno 3 progetti pratici con README curati e demo',
@@ -314,7 +334,8 @@ const COACH_PRIORITY_ACTIONS: Record<CategoryId, string[]> = {
   ],
 };
 
-// ─── Career Coach: insight motivazionale per settore target ─────────────────
+// ─── Career Coach: insight motivazionale ─────────────────────
+
 const COACH_MOTIVATIONAL: Record<CategoryId, string> = {
   'tech': "Il tech è uno dei pochi settori dove il portfolio conta più del titolo di studio. Ogni progetto che costruisci è prova tangibile di ciò che sai fare — non aspettare la perfezione, pubblica e itera. I developer più forti non sono quelli che sanno tutto, ma quelli che imparano più velocemente. Il tuo percorso di transizione è un vantaggio reale: porti prospettive che chi è sempre stato in tech semplicemente non ha.",
   'marketing': "Il marketing moderno premia chi sa unire creatività e dati. La tua capacità di pensare per sistemi, misurare l'impatto e adattare la strategia è ciò che separa un esecutore da un marketer strategico. Ogni progetto — anche piccolo — è un esperimento: documenta, misura, impara. I recruiter nel marketing vogliono vedere numeri reali, anche su scala ridotta, che dimostrino che sai muovere l'ago.",
@@ -324,15 +345,61 @@ const COACH_MOTIVATIONAL: Record<CategoryId, string> = {
   'general-business': "Il business è, in fondo, problem solving con persone e risorse limitate. Le competenze trasversali che hai sviluppato — comunicazione, organizzazione, capacità di collaborare sotto pressione — sono fondamenta solide su cui costruire la specializzazione verticale. Non sottovalutare ciò che hai già: la transizione non è ricominciare da zero, ma reindirizzare competenze esistenti verso un nuovo contesto con intenzione.",
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AgentService {
+
+  private readonly authService = inject(AuthService);
 
   private latestResult: AnalysisResult | null = null;
   private latestCoachResult: CareerCoachResult | null = null;
+  private activeUserId: number | null = null;
 
-  // ─── ANALISI CANDIDATURA ─────────────────────────────────────────────────
+  // ─── Gestione account ──────────────────────────────────────
 
-  async simulateAnalysis(application: JobApplication): Promise<AnalysisResult> {
+  private syncAccount(): void {
+    const userId = this.authService.getUserId();
+
+    if (this.activeUserId !== userId) {
+      this.latestResult = null;
+      this.latestCoachResult = null;
+      this.activeUserId = userId;
+    }
+  }
+
+  private requireUserId(): number {
+    this.syncAccount();
+
+    const userId = this.authService.getUserId();
+
+    if (userId === null) {
+      throw new Error(
+        'Effettua l’accesso prima di salvare un’analisi.'
+      );
+    }
+
+    return userId;
+  }
+
+  private scopedKey(key: string): string | null {
+    this.syncAccount();
+
+    const userId = this.authService.getUserId();
+
+    return userId === null
+      ? null
+      : `${key}_user_${userId}`;
+  }
+
+  // ─── ANALISI CANDIDATURA ───────────────────────────────────
+
+  async simulateAnalysis(
+    application: JobApplication
+  ): Promise<AnalysisResult> {
+
+    const startedBy = this.requireUserId();
+
     await new Promise(resolve => setTimeout(resolve, 1800));
 
     const categoryId = detectCategory(
@@ -340,19 +407,43 @@ export class AgentService {
       application.jobOffer,
       application.candidateCv,
     );
+
     const categoryLabel = getCategoryLabel(categoryId);
 
     const jobSkills = extractSkillsForCategory(
       application.jobOffer + ' ' + application.role,
       categoryId,
     );
-    const cvSkills = extractSkillsForCategory(application.candidateCv, categoryId);
 
-    const bonus      = this.computeBonus(application, jobSkills);
-    const score      = this.generateMatchScore(jobSkills, cvSkills, bonus);
-    const missing    = this.generateMissingSkills(jobSkills, cvSkills);
-    const letter     = this.generateCoverLetter(application, cvSkills, categoryId);
-    const suggestions = this.generatePortfolioSuggestions(missing, application.role, categoryId);
+    const cvSkills = extractSkillsForCategory(
+      application.candidateCv,
+      categoryId
+    );
+
+    const bonus = this.computeBonus(application, jobSkills);
+
+    const score = this.generateMatchScore(
+      jobSkills,
+      cvSkills,
+      bonus
+    );
+
+    const missing = this.generateMissingSkills(
+      jobSkills,
+      cvSkills
+    );
+
+    const letter = this.generateCoverLetter(
+      application,
+      cvSkills,
+      categoryId
+    );
+
+    const suggestions = this.generatePortfolioSuggestions(
+      missing,
+      application.role,
+      categoryId
+    );
 
     const result: AnalysisResult = {
       id: Date.now().toString(),
@@ -366,49 +457,114 @@ export class AgentService {
       missingSkills: missing,
       coverLetter: letter,
       portfolioSuggestions: suggestions,
-      agentInsights: this.buildAgentInsights(score, cvSkills, jobSkills, missing, application.role, categoryId),
+      agentInsights: this.buildAgentInsights(
+        score,
+        cvSkills,
+        jobSkills,
+        missing,
+        application.role,
+        categoryId
+      ),
       analyzedAt: new Date(),
     };
 
+    if (this.authService.getUserId() !== startedBy) {
+      throw new Error(
+        'Sessione cambiata durante l’analisi: risultato non salvato.'
+      );
+    }
+
     this.latestResult = result;
+
     this.saveToLocalStorage(LS_ANALYSIS_KEY, result);
+
     return result;
   }
 
-  extractSkills(role: string, jobOffer: string, cv: string): string[] {
-    return extractSkillsForCategory(cv, detectCategory(role, jobOffer, cv));
+  extractSkills(
+    role: string,
+    jobOffer: string,
+    cv: string
+  ): string[] {
+    return extractSkillsForCategory(
+      cv,
+      detectCategory(role, jobOffer, cv)
+    );
   }
 
-  generateMatchScore(jobSkills: string[], cvSkills: string[], bonus = 0): number {
+  generateMatchScore(
+    jobSkills: string[],
+    cvSkills: string[],
+    bonus = 0
+  ): number {
+
     if (jobSkills.length === 0) {
-      return Math.min(97, Math.floor(Math.random() * 20) + 55 + bonus);
+      return Math.min(
+        97,
+        Math.floor(Math.random() * 20) + 55 + bonus
+      );
     }
-    const cvSet   = new Set(cvSkills.map(s => s.toLowerCase()));
-    const matches = jobSkills.filter(s => cvSet.has(s.toLowerCase())).length;
-    const base    = Math.round((matches / jobSkills.length) * 100);
-    const delta   = Math.floor(Math.random() * 12) - 6;
-    return Math.min(97, Math.max(38, base + delta + bonus));
+
+    const cvSet = new Set(
+      cvSkills.map(s => s.toLowerCase())
+    );
+
+    const matches = jobSkills.filter(
+      s => cvSet.has(s.toLowerCase())
+    ).length;
+
+    const base = Math.round(
+      (matches / jobSkills.length) * 100
+    );
+
+    const delta = Math.floor(Math.random() * 12) - 6;
+
+    return Math.min(
+      97,
+      Math.max(38, base + delta + bonus)
+    );
   }
 
-  generateMissingSkills(jobSkills: string[], cvSkills: string[]): string[] {
-    const cvSet = new Set(cvSkills.map(s => s.toLowerCase()));
+  generateMissingSkills(
+    jobSkills: string[],
+    cvSkills: string[]
+  ): string[] {
+
+    const cvSet = new Set(
+      cvSkills.map(s => s.toLowerCase())
+    );
+
     return jobSkills
       .filter(s => !cvSet.has(s.toLowerCase()))
       .slice(0, 6);
   }
 
-  generateCoverLetter(application: JobApplication, cvSkills: string[], category: CategoryId): string {
+  generateCoverLetter(
+    application: JobApplication,
+    cvSkills: string[],
+    category: CategoryId
+  ): string {
+
     const { role, portfolioUrl } = application;
-    const topSkills  = cvSkills.slice(0, 5);
-    const highlight  = topSkills.length > 0
+
+    const topSkills = cvSkills.slice(0, 5);
+
+    const highlight = topSkills.length > 0
       ? topSkills.join(', ')
       : 'strumenti e metodologie del settore';
-    const topTwo     = topSkills.slice(0, 2).join(' e ') || 'competenze chiave';
+
+    const topTwo = topSkills.slice(0, 2).join(' e ')
+      || 'competenze chiave';
+
     const portfolioLine = portfolioUrl?.trim()
       ? `\n\nPuoi consultare esempi concreti del mio lavoro su: ${portfolioUrl.trim()}`
       : '';
 
-    const { para1, para2 } = this.buildLetterBody(category, highlight, topTwo);
+    const { para1, para2 } = this.buildLetterBody(
+      category,
+      highlight,
+      topTwo
+    );
 
     return `Gentile Team di Selezione,
 
@@ -425,61 +581,121 @@ Grazie per l'attenzione e la disponibilità.
 Cordiali saluti`;
   }
 
-  generatePortfolioSuggestions(missingSkills: string[], role: string, category: CategoryId): string[] {
-    const skillSuggestions = missingSkills.slice(0, 3).map(skill => {
-      const tech = TECH_PROJECT_IDEAS[skill];
-      if (tech) return tech;
-      return `Acquisisci esperienza pratica in ${skill} e documentala nel tuo portfolio con un progetto reale.`;
-    });
+  generatePortfolioSuggestions(
+    missingSkills: string[],
+    role: string,
+    category: CategoryId
+  ): string[] {
 
-    const extras = CATEGORY_PORTFOLIO_EXTRAS[category] ?? CATEGORY_PORTFOLIO_EXTRAS['general-business'];
-    const roleExtra = `Aggiungi un case study "${role}" al portfolio: obiettivi, approccio e risultati ottenuti.`;
+    const skillSuggestions = missingSkills
+      .slice(0, 3)
+      .map(skill => {
 
-    return [roleExtra, ...skillSuggestions, ...extras].slice(0, 5);
+        const tech = TECH_PROJECT_IDEAS[skill];
+
+        if (tech) {
+          return tech;
+        }
+
+        return `Acquisisci esperienza pratica in ${skill} e documentala nel tuo portfolio con un progetto reale.`;
+      });
+
+    const extras =
+      CATEGORY_PORTFOLIO_EXTRAS[category]
+      ?? CATEGORY_PORTFOLIO_EXTRAS['general-business'];
+
+    const roleExtra =
+      `Aggiungi un case study "${role}" al portfolio: obiettivi, approccio e risultati ottenuti.`;
+
+    return [
+      roleExtra,
+      ...skillSuggestions,
+      ...extras
+    ].slice(0, 5);
   }
 
   getLatestResult(): AnalysisResult | null {
+
+    this.syncAccount();
+
     if (!this.latestResult) {
       const history = this.getAnalysisHistory();
-      if (history.length > 0) this.latestResult = history[0] as unknown as AnalysisResult;
+
+      if (history.length > 0) {
+        this.latestResult = history[0] as AnalysisResult;
+      }
     }
+
     return this.latestResult;
   }
 
-  // ─── CAREER COACH ────────────────────────────────────────────────────────
+  // ─── CAREER COACH ──────────────────────────────────────────
 
-  async simulateCareerCoach(input: CareerCoachInput): Promise<CareerCoachResult> {
+  async simulateCareerCoach(
+    input: CareerCoachInput
+  ): Promise<CareerCoachResult> {
+
+    const startedBy = this.requireUserId();
+
     await new Promise(resolve => setTimeout(resolve, 1800));
 
-    // TARGET: rileva settore OBIETTIVO dal solo campo goal (peso 70%)
-    // detectCategoryFromGoal usa ×40 sui role-title keyword → il goal domina sempre
-    const targetCategoryId = detectCategoryFromGoal(input.goal);
+    // TARGET: rileva settore OBIETTIVO dal solo campo goal
+    const targetCategoryId = detectCategoryFromGoal(
+      input.goal
+    );
 
-    // SOURCE: rileva settore ATTUALE dal background + current skills (peso 30%)
-    const sourceCategoryId = detectCategory('', input.background, input.currentSkills);
+    // SOURCE: rileva settore attuale dal background
+    const sourceCategoryId = detectCategory(
+      '',
+      input.background,
+      input.currentSkills
+    );
 
-    const targetCategoryLabel = getCategoryLabel(targetCategoryId);
-    const sourceCategoryLabel = getCategoryLabel(sourceCategoryId);
+    const targetCategoryLabel = getCategoryLabel(
+      targetCategoryId
+    );
 
-    // Skill trasferibili = skill del candidato già rilevanti per il settore TARGET
-    const candidateText = [input.goal, input.background, input.currentSkills].join(' ');
-    const transferableSkills = extractSkillsForCategory(candidateText, targetCategoryId);
+    const sourceCategoryLabel = getCategoryLabel(
+      sourceCategoryId
+    );
 
-    // Skill mancanti = skill del settore target che il candidato non ha ancora
-    const allTargetSkills = getAllCategorySkillNames(targetCategoryId);
-    const transferableSet = new Set(transferableSkills.map(s => s.toLowerCase()));
+    const candidateText = [
+      input.goal,
+      input.background,
+      input.currentSkills
+    ].join(' ');
+
+    const transferableSkills = extractSkillsForCategory(
+      candidateText,
+      targetCategoryId
+    );
+
+    const allTargetSkills = getAllCategorySkillNames(
+      targetCategoryId
+    );
+
+    const transferableSet = new Set(
+      transferableSkills.map(s => s.toLowerCase())
+    );
+
     const missingSkills = allTargetSkills
       .filter(s => !transferableSet.has(s.toLowerCase()))
       .slice(0, 8);
 
-    const roadmap             = COACH_ROADMAPS[targetCategoryId];
-    const priorityActions     = COACH_PRIORITY_ACTIONS[targetCategoryId];
-    const motivationalInsight = COACH_MOTIVATIONAL[targetCategoryId];
-    const portfolioSuggestions = this.generatePortfolioSuggestions(
-      missingSkills.slice(0, 3),
-      input.goal,
-      targetCategoryId,
-    );
+    const roadmap = COACH_ROADMAPS[targetCategoryId];
+
+    const priorityActions =
+      COACH_PRIORITY_ACTIONS[targetCategoryId];
+
+    const motivationalInsight =
+      COACH_MOTIVATIONAL[targetCategoryId];
+
+    const portfolioSuggestions =
+      this.generatePortfolioSuggestions(
+        missingSkills.slice(0, 3),
+        input.goal,
+        targetCategoryId
+      );
 
     const agentInsights = this.buildCoachAgentInsights(
       input,
@@ -490,7 +706,7 @@ Cordiali saluti`;
       transferableSkills,
       missingSkills,
       roadmap,
-      portfolioSuggestions,
+      portfolioSuggestions
     );
 
     const result: CareerCoachResult = {
@@ -510,74 +726,191 @@ Cordiali saluti`;
       analyzedAt: new Date(),
     };
 
+    if (this.authService.getUserId() !== startedBy) {
+      throw new Error(
+        'Sessione cambiata durante l’analisi: risultato non salvato.'
+      );
+    }
+
     this.latestCoachResult = result;
+
     this.saveToLocalStorage(LS_COACH_KEY, result);
+
     return result;
   }
 
   getLatestCoachResult(): CareerCoachResult | null {
+
+    this.syncAccount();
+
     if (!this.latestCoachResult) {
       const history = this.getCoachHistory();
-      if (history.length > 0) this.latestCoachResult = history[0] as unknown as CareerCoachResult;
+
+      if (history.length > 0) {
+        this.latestCoachResult = history[0] as CareerCoachResult;
+      }
     }
+
     return this.latestCoachResult;
   }
 
   getAnalysisHistory(): AnalysisResult[] {
-    return this.loadFromLocalStorage<AnalysisResult>(LS_ANALYSIS_KEY);
+    return this.loadFromLocalStorage<AnalysisResult>(
+      LS_ANALYSIS_KEY
+    );
   }
 
   getCoachHistory(): CareerCoachResult[] {
-    return this.loadFromLocalStorage<CareerCoachResult>(LS_COACH_KEY);
+    return this.loadFromLocalStorage<CareerCoachResult>(
+      LS_COACH_KEY
+    );
   }
 
-  /** Carica un risultato salvato come "attivo" — usato da Archivio per riaprire. */
+  // ─── Archivio ──────────────────────────────────────────────
+
   setLatestResult(result: AnalysisResult): void {
+    this.requireUserId();
     this.latestResult = result;
   }
 
   setLatestCoachResult(result: CareerCoachResult): void {
+    this.requireUserId();
     this.latestCoachResult = result;
   }
 
-  /** Elimina un record dall'archivio localStorage. */
   deleteAnalysisFromHistory(id: string): void {
-    const items = this.loadFromLocalStorage<{ id: string }>(LS_ANALYSIS_KEY);
+
+    const key = this.scopedKey(LS_ANALYSIS_KEY);
+
+    if (!key) {
+      return;
+    }
+
+    const items = this.loadFromLocalStorage<{ id: string }>(
+      LS_ANALYSIS_KEY
+    );
+
     try {
-      localStorage.setItem(LS_ANALYSIS_KEY, JSON.stringify(items.filter(i => i.id !== id)));
-    } catch { /* ignore */ }
+      localStorage.setItem(
+        key,
+        JSON.stringify(
+          items.filter(item => item.id !== id)
+        )
+      );
+
+      if (this.latestResult?.id === id) {
+        this.latestResult = null;
+      }
+
+    } catch {
+      // Storage non disponibile
+    }
   }
 
   deleteCoachFromHistory(id: string): void {
-    const items = this.loadFromLocalStorage<{ id: string }>(LS_COACH_KEY);
+
+    const key = this.scopedKey(LS_COACH_KEY);
+
+    if (!key) {
+      return;
+    }
+
+    const items = this.loadFromLocalStorage<{ id: string }>(
+      LS_COACH_KEY
+    );
+
     try {
-      localStorage.setItem(LS_COACH_KEY, JSON.stringify(items.filter(i => i.id !== id)));
-    } catch { /* ignore */ }
+      localStorage.setItem(
+        key,
+        JSON.stringify(
+          items.filter(item => item.id !== id)
+        )
+      );
+
+      if (this.latestCoachResult?.id === id) {
+        this.latestCoachResult = null;
+      }
+
+    } catch {
+      // Storage non disponibile
+    }
   }
 
-  // ─── PRIVATE HELPERS ──────────────────────────────────────────────────────
+  // ─── PRIVATE HELPERS ───────────────────────────────────────
 
-  private saveToLocalStorage<T>(key: string, item: T): void {
+  private saveToLocalStorage<T>(
+    key: string,
+    item: T
+  ): void {
+
+    const scoped = this.scopedKey(key);
+
+    if (!scoped) {
+      return;
+    }
+
     try {
       const existing = this.loadFromLocalStorage<T>(key);
-      const updated  = [item, ...existing].slice(0, LS_MAX_ITEMS);
-      localStorage.setItem(key, JSON.stringify(updated));
-    } catch { /* storage might be unavailable */ }
+
+      const updated = [
+        item,
+        ...existing
+      ].slice(0, LS_MAX_ITEMS);
+
+      localStorage.setItem(
+        scoped,
+        JSON.stringify(updated)
+      );
+
+    } catch {
+      // Storage non disponibile
+    }
   }
 
   private loadFromLocalStorage<T>(key: string): T[] {
+
+    const scoped = this.scopedKey(key);
+
+    if (!scoped) {
+      return [];
+    }
+
     try {
-      return JSON.parse(localStorage.getItem(key) || '[]') as T[];
+
+      const parsed: unknown = JSON.parse(
+        localStorage.getItem(scoped) || '[]'
+      );
+
+      return Array.isArray(parsed)
+        ? parsed as T[]
+        : [];
+
     } catch {
       return [];
     }
   }
 
-  private computeBonus(application: JobApplication, jobSkills: string[]): number {
+  private computeBonus(
+    application: JobApplication,
+    jobSkills: string[]
+  ): number {
+
     let bonus = 0;
-    if (application.portfolioUrl?.trim()) bonus += 5;
+
+    if (application.portfolioUrl?.trim()) {
+      bonus += 5;
+    }
+
     const roleLower = application.role.toLowerCase();
-    if (jobSkills.some(s => roleLower.includes(s.toLowerCase()))) bonus += 3;
+
+    if (
+      jobSkills.some(s =>
+        roleLower.includes(s.toLowerCase())
+      )
+    ) {
+      bonus += 3;
+    }
+
     return bonus;
   }
 
@@ -591,29 +924,35 @@ Cordiali saluti`;
   private buildLetterBody(
     category: CategoryId,
     highlight: string,
-    topTwo: string,
+    topTwo: string
   ): { para1: string; para2: string } {
+
     switch (category) {
+
       case 'content-creator':
         return {
           para1: `Mi occupo di contenuti editoriali e strategie di comunicazione con competenze in ${highlight}, con focus su storytelling, brand voice e performance.`,
           para2: `Ho sviluppato strategie di contenuto e prodotto materiali utilizzando ${topTwo}, curando la coerenza con il brand, il target di riferimento e i risultati misurabili.`,
         };
+
       case 'marketing':
         return {
           para1: `Lavoro in ${highlight} con un approccio data-driven orientato a risultati concreti e misurabili.`,
           para2: `Ho contribuito a campagne e progetti con ${topTwo}, traducendo strategie in azioni con impatto diretto su conversion rate e brand awareness.`,
         };
+
       case 'design-ux':
         return {
           para1: `Il mio processo di design parte sempre dall'utente: ricerca, wireframes, prototipazione e test iterativi. Lavoro con ${highlight}.`,
           para2: `Ho sviluppato padronanza approfondita in ${topTwo}, creando esperienze digitali che uniscono estetica, usabilità e coerenza di brand.`,
         };
+
       case 'travel-hospitality':
         return {
           para1: `La mia esperienza nel settore travel include competenze in ${highlight}, con forte orientamento al cliente e cura dei dettagli in ogni fase del servizio.`,
           para2: `Ho gestito clienti internazionali e coordinato esperienze utilizzando ${topTwo}, lavorando in contesti di alta qualità con standard elevati.`,
         };
+
       default:
         return {
           para1: `Il mio profilo include competenze solide in ${highlight}, che mi permettono di apportare un contributo concreto fin dai primi giorni.`,
@@ -628,14 +967,26 @@ Cordiali saluti`;
     jobSkills: string[],
     missingSkills: string[],
     role: string,
-    category: CategoryId,
+    category: CategoryId
   ): AgentInsight[] {
-    const cvSet     = new Set(cvSkills.map(s => s.toLowerCase()));
-    const matches   = jobSkills.filter(s => cvSet.has(s.toLowerCase())).length;
-    const topJob    = jobSkills.slice(0, 5).join(', ')  || "nessuna skill rilevata nell'offerta";
-    const topCv     = cvSkills.slice(0, 4).join(', ')   || 'nessuna skill trovata nel profilo';
-    const topMiss   = missingSkills.slice(0, 3).join(', ');
-    const catLabel  = getCategoryLabel(category);
+
+    const cvSet = new Set(
+      cvSkills.map(s => s.toLowerCase())
+    );
+
+    const matches = jobSkills.filter(
+      s => cvSet.has(s.toLowerCase())
+    ).length;
+
+    const topJob = jobSkills.slice(0, 5).join(', ')
+      || "nessuna skill rilevata nell'offerta";
+
+    const topCv = cvSkills.slice(0, 4).join(', ')
+      || 'nessuna skill trovata nel profilo';
+
+    const topMiss = missingSkills.slice(0, 3).join(', ');
+
+    const catLabel = getCategoryLabel(category);
 
     return [
       {
@@ -682,12 +1033,23 @@ Cordiali saluti`;
     transferableSkills: string[],
     missingSkills: string[],
     roadmap: RoadmapItem[],
-    portfolioSuggestions: string[],
+    portfolioSuggestions: string[]
   ): AgentInsight[] {
-    const totalActions    = roadmap.reduce((sum, r) => sum + r.actions.length, 0);
-    const topTransferable = transferableSkills.slice(0, 3).join(', ') || 'nessuna skill rilevata nel settore target';
-    const topMissing      = missingSkills.slice(0, 3).join(', ') || 'profilo già ben allineato';
-    const isTransition    = sourceCategoryId !== targetCategoryId;
+
+    const totalActions = roadmap.reduce(
+      (sum, item) => sum + item.actions.length,
+      0
+    );
+
+    const topTransferable = transferableSkills
+      .slice(0, 3)
+      .join(', ')
+      || 'nessuna skill rilevata nel settore target';
+
+    const topMissing = missingSkills.slice(0, 3).join(', ')
+      || 'profilo già ben allineato';
+
+    const isTransition = sourceCategoryId !== targetCategoryId;
 
     return [
       {

@@ -1,0 +1,337 @@
+
+:host {
+  display: block;
+}
+
+.login-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  box-sizing: border-box;
+  background: #faf8f5;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #eae5df;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(45, 37, 30, 0.07);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .login-icon {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: #a47e60;
+    font-size: 32px;
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    color: #302c29;
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  p {
+    margin: 0;
+    color: #81776e;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  label {
+    color: #4b4039;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  input {
+    width: 100%;
+    padding: 13px 15px;
+    box-sizing: border-box;
+    border: 1px solid #ddd5cd;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #302c29;
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      border-color: #a47e60;
+      box-shadow: 0 0 0 3px rgba(164, 126, 96, 0.12);
+    }
+
+    &::placeholder {
+      color: #aaa19a;
+    }
+  }
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px 20px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #795b46;
+  color: #ffffff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #624936;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.error-message {
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff1f0;
+  color: #a12d2d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.server-notice {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f7f0e6;
+  border: 1px solid #e6d4bd;
+  border-radius: 12px;
+  text-align: center;
+
+  p {
+    margin: 0 0 10px;
+    color: #795b46;
+    font-size: 13px;
+    line-height: 1.6;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: #4b382c;
+    font-size: 14px;
+  }
+}
+
+.login-footer {
+  margin-top: 28px;
+  text-align: center;
+
+  p {
+    margin: 0 0 14px;
+    color: #81776e;
+    font-size: 12px;
+  }
+
+  a {
+    color: #795b46;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 24px 16px;
+  }
+
+  .login-card {
+    padding: 28px 22px;
+  }
+
+  .login-header h1 {
+    font-size: 23px;
+  }
+
+/* Benvenuto animato AgentHire */
+.welcome-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 48px 36px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #eae5df;
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(45, 37, 30, 0.08);
+  text-align: center;
+  animation: welcomeAppear 0.5s ease-out both;
+
+  h1 {
+    margin: 16px 0 12px;
+    color: #302c29;
+    font-size: 25px;
+    line-height: 1.3;
+  }
+
+  p {
+    color: #81776e;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+.welcome-character {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.welcome-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 92px;
+  background: #f7efe5;
+  border: 2px solid #e6d4bd;
+  border-radius: 50%;
+  font-size: 48px;
+  animation: avatarBounce 1.3s ease-in-out infinite;
+}
+
+.welcome-sparkle {
+  color: #c69d76;
+  font-size: 22px;
+  animation: sparkle 1.5s ease-in-out infinite alternate;
+}
+
+.welcome-badge {
+  display: inline-block;
+  padding: 7px 14px;
+  background: #f7efe5;
+  border-radius: 999px;
+  color: #795b46;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.welcome-success {
+  margin-top: 20px;
+  color: #567b60;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.welcome-loader {
+  width: 85px;
+  height: 4px;
+  margin: 26px auto 0;
+  background: #eae5df;
+  border-radius: 999px;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #b58a65;
+    transform-origin: left;
+    animation: welcomeProgress 2s linear forwards;
+  }
+}
+
+@keyframes welcomeAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes avatarBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes sparkle {
+  from {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes welcomeProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-card,
+  .welcome-avatar,
+  .welcome-sparkle,
+  .welcome-loader::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-card {
+    padding: 36px 22px;
+
+    h1 {
+      font-size: 22px;
+    }
+  }
+}
+
+}

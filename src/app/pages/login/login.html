@@ -1,0 +1,123 @@
+
+<section class="login-page">
+
+  @if (showWelcome()) {
+
+    <!-- Benvenuto dopo il login -->
+    <div class="welcome-card">
+
+      <div class="welcome-character">
+        <span class="welcome-sparkle">✦</span>
+        <span class="welcome-avatar">👨‍💼</span>
+        <span class="welcome-sparkle">✦</span>
+      </div>
+
+      @if (isDemo()) {
+        <span class="welcome-badge">MODALITÀ DEMO</span>
+        <h1>Benvenuto in AgentHire DEMO!</h1>
+      } @else {
+        <span class="welcome-badge">ACCESSO RIUSCITO</span>
+        <h1>Bentornato su AgentHire!</h1>
+      }
+
+      <p>
+        Il tuo assistente professionale è pronto.
+      </p>
+
+      <div class="welcome-success">
+        ✓ Accesso effettuato con successo
+      </div>
+
+      <div class="welcome-loader"></div>
+
+    </div>
+
+  } @else {
+
+    <!-- Modulo di accesso -->
+    <div class="login-card">
+
+      <div class="login-header">
+        <span class="login-icon">✦</span>
+        <h1>Bentornato su AgentHire</h1>
+        <p>
+          Accedi al tuo spazio personale per analizzare
+          candidature e sviluppare il tuo percorso professionale.
+        </p>
+      </div>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="La tua email"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="La tua password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        @if (errorMessage()) {
+          <p class="error-message" role="alert">
+            {{ errorMessage() }}
+          </p>
+        }
+
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loading() || loginForm.invalid"
+        >
+          @if (loading()) {
+            ⏳ Connessione in corso...
+          } @else {
+            Accedi ad AgentHire
+          }
+        </button>
+
+        @if (loading()) {
+          <div class="server-notice" role="status">
+            <p>
+              <strong>
+                ☕ Stiamo preparando il tuo spazio AgentHire...
+              </strong>
+            </p>
+            <p>
+              Il server gratuito potrebbe impiegare circa
+              un minuto o più per riattivarsi.
+            </p>
+            <p>
+              La richiesta è in corso. Non serve premere di nuovo.
+            </p>
+          </div>
+        }
+
+      </form>
+
+      <div class="login-footer">
+        <p>Accesso riservato agli account autorizzati.</p>
+        <a routerLink="/home">← Torna alla Home</a>
+      </div>
+
+    </div>
+
+  }
+
+</section>

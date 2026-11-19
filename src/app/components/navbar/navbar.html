@@ -1,4 +1,6 @@
+
 <nav class="navbar">
+
   <div class="navbar__brand" routerLink="/home">
     <span class="navbar__logo">✦</span>
     <span class="navbar__name">AgentHire <em>AI</em></span>
@@ -17,18 +19,77 @@
     <span class="navbar__toggle-bar"></span>
   </button>
 
-  <ul id="navbar-menu" class="navbar__links" [class.navbar__links--open]="menuOpen">
+  <ul
+    id="navbar-menu"
+    class="navbar__links"
+    [class.navbar__links--open]="menuOpen"
+  >
+
     <li>
-      <a routerLink="/home" routerLinkActive="active">Home</a>
+      <a routerLink="/home" routerLinkActive="active">
+        Home
+      </a>
     </li>
+
     <li>
-      <a routerLink="/new-analysis" [class.active]="isAnalysisActive">Nuova Analisi</a>
+      <a
+        routerLink="/new-analysis"
+        [class.active]="isAnalysisActive"
+      >
+        Nuova Analisi
+      </a>
     </li>
+
     <li>
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/dashboard" routerLinkActive="active">
+        Dashboard
+      </a>
     </li>
+
     <li>
-      <a routerLink="/history" routerLinkActive="active">Archivio</a>
+      <a routerLink="/history" routerLinkActive="active">
+        Archivio
+      </a>
     </li>
+
+    @if (!authService.isLoggedIn()) {
+
+      <li>
+        <a routerLink="/login" routerLinkActive="active">
+          Accedi
+        </a>
+      </li>
+
+    } @else {
+
+      <li class="navbar__account">
+        <span class="navbar__account-label">
+
+          <span class="navbar__account-icon">✦</span>
+
+          @if (authService.currentRole() === 'DEMO') {
+            Account DEMO
+          } @else if (authService.currentRole() === 'USER') {
+            Area personale
+          } @else {
+            Sessione attiva
+          }
+
+        </span>
+      </li>
+
+      <li>
+        <button
+          type="button"
+          class="navbar__logout"
+          (click)="logout()"
+        >
+          Esci
+        </button>
+      </li>
+
+    }
+
   </ul>
+
 </nav>
