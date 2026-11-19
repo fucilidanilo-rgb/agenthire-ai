@@ -1,30 +1,41 @@
 
+/* =========================================
+   AGENTHIRE AI — NAVBAR
+   ========================================= */
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+
   height: var(--navbar-h);
+
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
+
   border-bottom: 1px solid rgba(212, 184, 160, 0.4);
   box-shadow: 0 1px 0 rgba(212, 184, 160, 0.25);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 0 2.5rem;
   box-sizing: border-box;
   z-index: 100;
+
+  /* LOGO E BRAND */
 
   &__brand {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     cursor: pointer;
-    transition: opacity 0.2s;
     user-select: none;
+    transition: opacity 0.2s;
 
     &:hover {
       opacity: 0.72;
@@ -43,6 +54,7 @@
     font-weight: 500;
     color: #2c1f1a;
     letter-spacing: 0.02em;
+    white-space: nowrap;
 
     em {
       font-style: normal;
@@ -52,26 +64,46 @@
     }
   }
 
+  /* LINK DI NAVIGAZIONE */
+
   &__links {
     display: flex;
     align-items: center;
+
     list-style: none;
     gap: 0.05rem;
+
     margin: 0;
     padding: 0;
 
+    li {
+      display: flex;
+      align-items: center;
+    }
+
     a {
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
       padding: 0.38rem 0.9rem;
+
       border-radius: 7px;
+
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.838rem;
       font-weight: 400;
+      line-height: 1.4;
+
       color: #5c3d2e;
       letter-spacing: 0.01em;
       text-decoration: none;
+      white-space: nowrap;
+
       transition:
         color 0.22s,
         background 0.22s;
+
       position: relative;
 
       &:hover {
@@ -87,11 +119,15 @@
         &::after {
           content: '';
           position: absolute;
+
           bottom: 3px;
           left: 50%;
+
           transform: translateX(-50%);
+
           width: 18px;
           height: 2px;
+
           background: #c4956a;
           border-radius: 999px;
         }
@@ -99,21 +135,28 @@
     }
   }
 
-  // Pulsante menu mobile
+  /* PULSANTE MENU MOBILE */
+
   &__toggle {
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     gap: 4px;
+
     width: 34px;
     height: 34px;
     flex-shrink: 0;
+
     padding: 0;
+
     background: transparent;
     border: 1px solid rgba(212, 184, 160, 0.6);
     border-radius: 8px;
+
     cursor: pointer;
+
     transition:
       background 0.2s,
       border-color 0.2s;
@@ -132,51 +175,100 @@
   &__toggle-bar {
     width: 16px;
     height: 2px;
+
     border-radius: 999px;
     background: #5c3d2e;
+
     transition:
       transform 0.25s ease,
       opacity 0.2s ease;
   }
 }
 
-// Pulsante Esci: elegante e coerente con AgentHire
+/* =========================================
+   ACCOUNT DEMO / AREA PERSONALE
+   ========================================= */
+
+.navbar__account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 0.4rem;
+}
+
+.navbar__account-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0.38rem 0.9rem;
+
+  box-sizing: border-box;
+
+  background: rgba(196, 149, 106, 0.1);
+  border: 1px solid rgba(196, 149, 106, 0.3);
+  border-radius: 999px;
+
+  color: #795b46;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.838rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.navbar__account-icon {
+  color: #c4956a;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+/* =========================================
+   PULSANTE ESCI
+   ========================================= */
+
 .navbar__logout {
   appearance: none;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   margin-left: 0.5rem;
-  padding: 0.45rem 1rem;
+  padding: 0.38rem 0.9rem;
+
+  box-sizing: border-box;
 
   border: 1px solid rgba(196, 149, 106, 0.45);
   border-radius: 8px;
-  background: rgba(196, 149, 106, 0.10);
+
+  background: rgba(196, 149, 106, 0.1);
 
   color: #795b46;
+
   font-family: 'DM Sans', sans-serif;
   font-size: 0.838rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
+  letter-spacing: 0.01em;
 
   cursor: pointer;
 
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+    color 0.2s ease;
 
   &:hover {
     background: #795b46;
     border-color: #795b46;
     color: #ffffff;
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
   }
 
   &:focus-visible {
@@ -185,8 +277,12 @@
   }
 }
 
-// Responsive: tablet e smartphone
+/* =========================================
+   RESPONSIVE — TABLET E SMARTPHONE
+   ========================================= */
+
 @media (max-width: 768px) {
+
   .navbar {
     padding: 0 1.1rem;
 
@@ -207,6 +303,7 @@
 
       flex-direction: column;
       align-items: stretch;
+
       gap: 0.15rem;
 
       background: #ffffff;
@@ -214,10 +311,12 @@
       box-shadow: 0 12px 28px rgba(139, 99, 85, 0.14);
 
       padding: 0.6rem;
+
       max-height: 0;
       overflow: hidden;
       opacity: 0;
       visibility: hidden;
+
       transform: translateY(-6px);
 
       transition:
@@ -227,9 +326,10 @@
         visibility 0s linear 0.28s;
 
       &--open {
-        max-height: 320px;
+        max-height: 400px;
         opacity: 1;
         visibility: visible;
+
         transform: translateY(0);
 
         transition:
@@ -243,6 +343,11 @@
       }
 
       a {
+        width: 100%;
+        box-sizing: border-box;
+
+        justify-content: flex-start;
+
         padding: 0.75rem 0.9rem;
         border-radius: 8px;
 
@@ -253,19 +358,36 @@
     }
   }
 
+  /* ACCOUNT SU MOBILE */
+
+  .navbar__account {
+    width: 100%;
+    margin: 6px 0;
+    justify-content: flex-start;
+  }
+
+  .navbar__account-label {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+  }
+
+  /* ESCI SU MOBILE */
+
   .navbar__logout {
     width: 100%;
     margin: 0;
     padding: 0.75rem 0.9rem;
     justify-content: flex-start;
-
-    &:hover {
-      transform: none;
-    }
   }
 }
 
+/* =========================================
+   SCHERMI MOLTO PICCOLI
+   ========================================= */
+
 @media (max-width: 400px) {
+
   .navbar {
     padding: 0 0.85rem;
 
@@ -279,54 +401,17 @@
   }
 }
 
+/* =========================================
+   ACCESSIBILITÀ
+   ========================================= */
+
 @media (prefers-reduced-motion: reduce) {
-  .navbar__logout {
+
+  .navbar__brand,
+  .navbar__links a,
+  .navbar__logout,
+  .navbar__toggle,
+  .navbar__toggle-bar {
     transition: none;
   }
-
-/* Etichetta account autenticato */
-.navbar__account {
-  display: flex;
-  align-items: center;
-  margin-left: 0.65rem;
-}
-
-.navbar__account-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  padding: 8px 13px;
-  border: 1px solid rgba(196, 149, 106, 0.35);
-  border-radius: 999px;
-
-  background: #f7efe5;
-  color: #795b46;
-
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.navbar__account-icon {
-  color: #c4956a;
-  font-size: 12px;
-}
-
-/* Etichetta nel menu smartphone */
-@media (max-width: 768px) {
-  .navbar__account {
-    width: 100%;
-    margin: 6px 0;
-  }
-
-  .navbar__account-label {
-    justify-content: flex-start;
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
-
 }
