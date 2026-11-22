@@ -414,4 +414,41 @@
   .navbar__toggle-bar {
     transition: none;
   }
+
+
+/* FIX NAVBAR MOBILE — mantiene logo e hamburger nel viewport */
+
+@media (max-width: 768px) {
+  .navbar {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: 1rem;
+  }
+
+  .navbar__brand {
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+
+  .navbar__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar__toggle {
+    display: flex;
+    flex: 0 0 34px;
+    margin-left: auto;
+    position: relative;
+    z-index: 102;
+  }
+
+  .navbar__links {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 }

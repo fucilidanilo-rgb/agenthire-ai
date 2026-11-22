@@ -116,4 +116,80 @@ a {
     border: 1px solid rgba(196, 149, 106, 0.28);
     color: #7A5234;
   }
+
+/* =========================================
+   AGENTHIRE — FIX LARGHEZZA MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  body {
+    overflow-x: clip;
+  }
+
+  app-root,
+  app-home {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Navbar sempre dentro lo schermo */
+  app-navbar .navbar {
+    position: fixed;
+    left: 0;
+    right: auto;
+    top: 0;
+
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+
+    padding: 0 14px;
+  }
+
+  app-navbar .navbar__brand {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  app-navbar .navbar__toggle {
+    display: flex;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Contenuto Home */
+  app-home .hero {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+  }
+
+  app-home .hero__content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  app-home .section,
+  app-home .premium-modes {
+    max-width: 100vw;
+    min-width: 0;
+  }
+
+  app-home .section--divided::before {
+    max-width: calc(100vw - 48px);
+  }
+}
+
 }
